@@ -22,7 +22,7 @@ class Monster3DProfile extends Component {
             0.25,
             20
         )
-        this.camera.position.set(-1.8, 0.9, 2.7);
+        this.camera.position.set(0, 0, 1.5);
 
         // setting controls
         const controls = new OrbitControls(this.camera, this.mount);
@@ -53,6 +53,19 @@ class Monster3DProfile extends Component {
             //         child.material.envMap = envMap;
             //     }
             // });
+            const object = gltf.scene.children[0]
+
+            object.updateMatrixWorld();
+            
+            const box = new THREE.Box3().setFromObject(object);
+            const center = box.getCenter(new THREE.Vector3());
+
+            controls.reset();
+
+            object.position.x += (object.position.x - center.x);
+            object.position.y += (object.position.y - center.y);
+            object.position.z += (object.position.z - center.z);
+
             this.scene.add(gltf.scene);
         }.bind(this), undefined, function (e) {
             console.error(e);
