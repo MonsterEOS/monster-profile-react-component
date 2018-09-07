@@ -1,7 +1,6 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { ActionType } from '../utils/enums'
-import monster3D from '../assets/models/Devil.gltf'
 import * as THREE from 'three'
 import GLTFLoader from '../utils/GLTFLoader'
 import OrbitControls from '../utils/OrbitControls'
@@ -47,24 +46,19 @@ class Monster3DProfile extends Component {
         // loading monster with GLTF loader
         const loader = new GLTFLoader()
 
-        loader.load(monster3D, function (gltf) {
-            // gltf.scene.traverse(function (child) {
-            //     if (child.isMesh) {
-            //         child.material.envMap = envMap;
-            //     }
-            // });
-            const object = gltf.scene.children[0]
+        loader.load(this.props.path, function (gltf) {
+            const monster = gltf.scene.children[0]
 
-            object.updateMatrixWorld();
+            monster.updateMatrixWorld();
             
-            const box = new THREE.Box3().setFromObject(object);
+            const box = new THREE.Box3().setFromObject(monster);
             const center = box.getCenter(new THREE.Vector3());
 
             controls.reset();
 
-            object.position.x += (object.position.x - center.x);
-            object.position.y += (object.position.y - center.y);
-            object.position.z += (object.position.z - center.z);
+            monster.position.x += (monster.position.x - center.x);
+            monster.position.y += (monster.position.y - center.y);
+            monster.position.z += (monster.position.z - center.z);
 
             this.scene.add(gltf.scene);
         }.bind(this), undefined, function (e) {
@@ -110,12 +104,17 @@ class Monster3DProfile extends Component {
 }
 
 Monster3DProfile.propTypes = {
-    typeId: PropTypes.number,
+    typeId: PropTypes.string.isRequired,
     action: PropTypes.oneOf(
         Object.keys(ActionType).map(
             key => ActionType[key]
         )
-    )
+    ),
+    path: PropTypes.string.isRequired
+}
+
+Monster3DProfile.defaultProps = {
+    action: ActionType.SLEEPING
 }
 
 export default Monster3DProfile
