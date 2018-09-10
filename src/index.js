@@ -7,8 +7,20 @@ import OrbitControls from './utils/OrbitControls'
 
 
 class Monster3DProfile extends Component {
+  constructor(props) {
+    super(props)
+    this.setMountNodeRef = element => {
+      this.mount = element
+    }
+    window.addEventListener(
+      "resize",
+      this.onWindowsResize,
+      false
+    )
+  }
+
   componentDidMount() {
-    const { background } = this.props
+    const { background, path } = this.props
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -16,13 +28,9 @@ class Monster3DProfile extends Component {
     this.scene = new THREE.Scene()
 
     // add camera
-    this.camera = new THREE.PerspectiveCamera(
-      90,
-      width / height,
-      0.25,
-      20
-    )
+    this.camera = new THREE.PerspectiveCamera(90, width / height, 0.25, 20)
     this.camera.position.set(0, 0, 1.5);
+    this.camera.updateProjectionMatrix()
 
     // setting controls
     const controls = new OrbitControls(this.camera, this.mount)
@@ -40,6 +48,7 @@ class Monster3DProfile extends Component {
     this.renderer.gammaOutput = true
     this.mount.appendChild(this.renderer.domElement)
 
+    // add light
     const light = new THREE.AmbientLight(0xffffff, 1.1)
     light.position.set(0, 1, 0)
     this.scene.add(light)
@@ -47,27 +56,35 @@ class Monster3DProfile extends Component {
     // loading monster with GLTF loader
     const loader = new GLTFLoader()
 
-    loader.load(this.props.path, function (gltf) {
+    loader.load(path, function (gltf) {
       const monster = gltf.scene.children[0]
 
       monster.updateMatrixWorld()
 
+      // center monster
       const box = new THREE.Box3().setFromObject(monster)
       const center = box.getCenter(new THREE.Vector3())
-
-      controls.reset()
 
       monster.position.x += (monster.position.x - center.x)
       monster.position.y += (monster.position.y - center.y)
       monster.position.z += (monster.position.z - center.z)
 
-      this.scene.add(gltf.scene)
-    }.bind(this), undefined, function (e) {
-      console.error(e)
-    });
+      controls.reset()
 
+      // add scene
+      this.scene.add(gltf.scene)
+    }.bind(this), undefined, console.error.bind(console))
 
     this.start()
+  }
+
+  onWindowsResize = () => {
+    const width = this.mount.clientWidth
+    const height = this.mount.clientHeight
+
+    this.camera.aspect = width / height
+    this.camera.updateProjectionMatrix()
+    this.renderer.setSize(width, height)
   }
 
   componentWillUnmount() {
@@ -103,7 +120,7 @@ class Monster3DProfile extends Component {
           width: size.width,
           height: size.height
         }}
-        ref={(mount) => { this.mount = mount }}
+        ref={this.setMountNodeRef}
       />
     )
   }
