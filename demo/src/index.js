@@ -10,6 +10,8 @@ const App = () =>
       typeId="aa5a4sd4d5as4d"
       action={ActionType.IDLE}
       path={monster3D}
+      size={{ width: "400px", height: "500px" }}
+      background={{ color: "#322e3a", alpha: 1 }}
     />
   </Fragment>
 

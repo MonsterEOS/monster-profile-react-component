@@ -8,6 +8,7 @@ import OrbitControls from './utils/OrbitControls'
 
 class Monster3DProfile extends Component {
   componentDidMount() {
+    const { background } = this.props
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -24,24 +25,24 @@ class Monster3DProfile extends Component {
     this.camera.position.set(0, 0, 1.5);
 
     // setting controls
-    const controls = new OrbitControls(this.camera, this.mount);
-    controls.target.set(0, -0.2, -0.2);
-    controls.autoRotate = false;
-    controls.autoRotateSpeed = -10;
-    controls.screenSpacePanning = true;
-    controls.update();
+    const controls = new OrbitControls(this.camera, this.mount)
+    controls.target.set(0, -0.2, -0.2)
+    controls.autoRotate = false
+    controls.autoRotateSpeed = -10
+    controls.screenSpacePanning = true
+    controls.update()
 
     // add renderer
-    this.renderer = new THREE.WebGLRenderer({ antialias: true })
-    this.renderer.setClearColor('#322e3a')
-    this.renderer.setPixelRatio(window.devicePixelRatio);
+    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    this.renderer.setClearColor(background.color, background.alpha)
+    this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
-    this.renderer.gammaOutput = true;
+    this.renderer.gammaOutput = true
     this.mount.appendChild(this.renderer.domElement)
 
     const light = new THREE.AmbientLight(0xffffff, 1.1)
-    light.position.set(0, 1, 0);
-    this.scene.add(light);
+    light.position.set(0, 1, 0)
+    this.scene.add(light)
 
     // loading monster with GLTF loader
     const loader = new GLTFLoader()
@@ -49,20 +50,20 @@ class Monster3DProfile extends Component {
     loader.load(this.props.path, function (gltf) {
       const monster = gltf.scene.children[0]
 
-      monster.updateMatrixWorld();
+      monster.updateMatrixWorld()
 
-      const box = new THREE.Box3().setFromObject(monster);
-      const center = box.getCenter(new THREE.Vector3());
+      const box = new THREE.Box3().setFromObject(monster)
+      const center = box.getCenter(new THREE.Vector3())
 
-      controls.reset();
+      controls.reset()
 
-      monster.position.x += (monster.position.x - center.x);
-      monster.position.y += (monster.position.y - center.y);
-      monster.position.z += (monster.position.z - center.z);
+      monster.position.x += (monster.position.x - center.x)
+      monster.position.y += (monster.position.y - center.y)
+      monster.position.z += (monster.position.z - center.z)
 
-      this.scene.add(gltf.scene);
+      this.scene.add(gltf.scene)
     }.bind(this), undefined, function (e) {
-      console.error(e);
+      console.error(e)
     });
 
 
@@ -94,9 +95,14 @@ class Monster3DProfile extends Component {
   }
 
   render() {
+    const { size } = this.props
+
     return (
       <div
-        style={{ width: '600px', height: '600px' }}
+        style={{
+          width: size.width,
+          height: size.height
+        }}
         ref={(mount) => { this.mount = mount }}
       />
     )
@@ -110,11 +116,27 @@ Monster3DProfile.propTypes = {
       key => ActionType[key]
     )
   ),
-  path: PropTypes.string.isRequired
+  path: PropTypes.string.isRequired,
+  size: PropTypes.shape({
+    width: PropTypes.string,
+    height: PropTypes.string
+  }),
+  background: PropTypes.shape({
+    color: PropTypes.string,
+    alpha: PropTypes.number
+  })
 }
 
 Monster3DProfile.defaultProps = {
-  action: ActionType.SLEEPING
+  action: ActionType.SLEEPING,
+  size: {
+    width: "600px",
+    height: "600px"
+  },
+  background: {
+    color: "#00000",
+    alpha: 1
+  }
 }
 
 export { Monster3DProfile, ActionType }
