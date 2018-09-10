@@ -17,6 +17,7 @@ class Monster3DProfile extends Component {
       this.onWindowsResize,
       false
     )
+    this.prevTime = 0
   }
 
   componentDidMount() {
@@ -29,16 +30,16 @@ class Monster3DProfile extends Component {
 
     // add camera
     this.camera = new THREE.PerspectiveCamera(90, width / height, 0.25, 20)
-    this.camera.position.set(0, 0, 1.5);
+    this.camera.position.set(0, 0, 1.5)
     this.camera.updateProjectionMatrix()
 
     // setting controls
-    const controls = new OrbitControls(this.camera, this.mount)
-    controls.target.set(0, -0.2, -0.2)
-    controls.autoRotate = false
-    controls.autoRotateSpeed = -10
-    controls.screenSpacePanning = true
-    controls.update()
+    this.controls = new OrbitControls(this.camera, this.mount)
+    this.controls.target.set(0, -0.2, -0.2)
+    this.controls.autoRotate = false
+    this.controls.autoRotateSpeed = -10
+    this.controls.screenSpacePanning = true
+    this.controls.update()
 
     // add renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
@@ -56,11 +57,10 @@ class Monster3DProfile extends Component {
     // loading monster with GLTF loader
     const loader = new GLTFLoader()
 
-    loader.load(path, function (gltf) {
-      const monster = gltf.scene.children[0]
+    loader.load(path, (gltf) => {
+      const monster = gltf.scene
 
       monster.updateMatrixWorld()
-
       // center monster
       const box = new THREE.Box3().setFromObject(monster)
       const center = box.getCenter(new THREE.Vector3())
@@ -69,11 +69,18 @@ class Monster3DProfile extends Component {
       monster.position.y += (monster.position.y - center.y)
       monster.position.z += (monster.position.z - center.z)
 
-      controls.reset()
+      this.controls.reset()
 
       // add scene
-      this.scene.add(gltf.scene)
-    }.bind(this), undefined, console.error.bind(console))
+      this.scene.add(monster)
+
+      // start animation
+      this.mixer = new THREE.AnimationMixer(monster)
+      this.mixer.clipAction(gltf.animations[0]).play()
+    },
+      undefined,
+      console.error.bind(console)
+    )
 
     this.start()
   }
@@ -102,9 +109,14 @@ class Monster3DProfile extends Component {
     cancelAnimationFrame(this.frameId)
   }
 
-  animate = () => {
-    this.renderScene()
+  animate = (time) => {
     this.frameId = window.requestAnimationFrame(this.animate)
+    const delta = (time - this.prevTime) / 1000
+
+    this.mixer && this.mixer.update(delta)
+    this.controls.update()
+    this.renderScene()
+    this.prevTime = time
   }
 
   renderScene = () => {
