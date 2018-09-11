@@ -28,14 +28,16 @@ const Monster = () =>
 ```
 
 ### Component properties
-| Name       | Type     | Default                            | Description                            |
-| ---------- | -------- | ---------------------------------- | -------------------------------------- |
-| typeId     | `number` |                                    | Monster ID.                            |
-| action     | `string` | `IDLE`                             | Monster state (animation name).        |
-| path       | `string` |                                    | Path to .gltf file (monster 3D model). |
-| rotation   | `object` | `{ x: -0.1, y: 0.7, z: 0 }`        | Initial monster's rotation.            |
-| size       | `object` | `{width: "auto", height: "600px"}` | Canvas dimensions.                     |
-| background | `object` | `{color: "#00000", alpha: 1 }`     | Canvas background configuration        |
+| Name            | Type     | Default                              | Description                                    |
+| --------------- | -------- | ------------------------------------ | ---------------------------------------------- |
+| typeId          | `number` |                                      | Monster ID.                                    |
+| action          | `string` | `IDLE`                               | Monster state (animation name).                |
+| path            | `string` |                                      | Path to .gltf file (monster 3D model).         |
+| rotation        | `object` | `{ x: -0.1, y: 0.7, z: 0 }`          | Initial monster's rotation.                    |
+| autoRotate      | `bool`   | `false`                              | Enables autorotation.                          |
+| autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed. |
+| size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                             |
+| background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.               |
 
 
 ## Run demo
