@@ -5,7 +5,6 @@ import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
 import OrbitControls from './utils/OrbitControls'
 
-
 class Monster3DProfile extends Component {
   constructor(props) {
     super(props)
@@ -21,7 +20,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path } = this.props
+    const { background, path, action } = this.props
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -57,21 +56,22 @@ class Monster3DProfile extends Component {
     const loader = new GLTFLoader()
 
     loader.load(path, (gltf) => {
-      const monster = gltf.scene
+      this.model = gltf
+      this.monster = this.model.scene
 
-      monster.updateMatrixWorld()
-      // center monster
-      const box = new THREE.Box3().setFromObject(monster)
+      this.monster.updateMatrixWorld()
+      // center this.monster
+      const box = new THREE.Box3().setFromObject(this.monster)
       const size = box.getSize(new THREE.Vector3()).length()
       const center = box.getCenter(new THREE.Vector3())
 
-      monster.position.x += (monster.position.x - center.x)
-      monster.position.y += (monster.position.y - center.y)
-      monster.position.z += (monster.position.z - center.z)
+      this.monster.position.x += (this.monster.position.x - center.x)
+      this.monster.position.y += (this.monster.position.y - center.y)
+      this.monster.position.z += (this.monster.position.z - center.z)
 
-      // some tweaking
-      monster.rotation.y = 0.6
-      monster.rotation.z = 0
+      // some rotation tweaking
+      this.monster.rotation.y = 0.7
+      this.monster.rotation.x = -0.1
 
       this.controls.maxDistance = size * 10
       this.controls.reset()
@@ -87,11 +87,12 @@ class Monster3DProfile extends Component {
       this.camera.lookAt(center);
 
       // add scene
-      this.scene.add(monster)
+      this.scene.add(this.monster)
 
       // start animation
-      this.mixer = new THREE.AnimationMixer(monster)
-      this.mixer.clipAction(gltf.animations[0]).play()
+      this.mixer = new THREE.AnimationMixer(this.monster)
+      const clip = THREE.AnimationClip.findByName(this.model.animations, action)
+      this.mixer.clipAction(clip).play()
     },
       undefined,
       console.error.bind(console)
@@ -134,13 +135,22 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
+  animateState = () => {
+    const { action } = this.props
+    if (this.mount) {
+      const clip = THREE.AnimationClip.findByName(this.model.animations, action)
+      this.mixer.stopAllAction()
+      this.mixer.clipAction(clip).play()
+    }
+  }
+
   renderScene = () => {
-    this.renderer.render(this.scene, this.camera)
+    this.renderer.render(this.scene, this.camera) 
   }
 
   render() {
     const { size } = this.props
-
+    this.animateState()
     return (
       <div
         style={{
@@ -154,7 +164,7 @@ class Monster3DProfile extends Component {
 }
 
 Monster3DProfile.propTypes = {
-  typeId: PropTypes.string.isRequired,
+  typeId: PropTypes.number.isRequired,
   action: PropTypes.oneOf(
     Object.keys(ActionType).map(
       key => ActionType[key]
