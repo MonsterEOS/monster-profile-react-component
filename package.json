@@ -1,6 +1,6 @@
 {
   "name": "react-monstereos-profile",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "description": "react-monstereos-profile React component",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -32,10 +32,10 @@
     "react-dom": "^16.5.0",
     "three": "^0.96.0"
   },
-  "author": "",
-  "homepage": "",
+  "author": "VertexStudio",
+  "homepage": "https://github.com/VertexStudio/monster-profile-react-component",
   "license": "MIT",
-  "repository": "",
+  "repository": "https://github.com/VertexStudio/monster-profile-react-component",
   "keywords": [
     "react-component"
   ]
