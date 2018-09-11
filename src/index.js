@@ -4,6 +4,7 @@ import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
 import OrbitControls from './utils/OrbitControls'
+import "./index.css"
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -20,7 +21,12 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, action } = this.props
+    const { background, path } = this.props
+
+    // default values
+    const defaultBackground = { color: "#322e3a", alpha: 1 }
+    const canvasBackground = { ...defaultBackground, ...background }
+
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -34,14 +40,12 @@ class Monster3DProfile extends Component {
     // setting controls
     this.controls = new OrbitControls(this.camera, this.mount)
     this.controls.target.set(0, -0.2, -0.2)
-    this.controls.autoRotate = false
-    this.controls.autoRotateSpeed = -10
     this.controls.screenSpacePanning = true
     this.controls.update()
 
     // add renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    this.renderer.setClearColor(background.color, background.alpha)
+    this.renderer.setClearColor(canvasBackground.color, canvasBackground.alpha)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
     this.renderer.gammaOutput = true
@@ -55,50 +59,64 @@ class Monster3DProfile extends Component {
     // loading monster with GLTF loader
     const loader = new GLTFLoader()
 
-    loader.load(path, (gltf) => {
-      this.model = gltf
-      this.monster = this.model.scene
-
-      this.monster.updateMatrixWorld()
-      // center this.monster
-      const box = new THREE.Box3().setFromObject(this.monster)
-      const size = box.getSize(new THREE.Vector3()).length()
-      const center = box.getCenter(new THREE.Vector3())
-
-      this.monster.position.x += (this.monster.position.x - center.x)
-      this.monster.position.y += (this.monster.position.y - center.y)
-      this.monster.position.z += (this.monster.position.z - center.z)
-
-      // some rotation tweaking
-      this.monster.rotation.y = 0.7
-      this.monster.rotation.x = -0.1
-
-      this.controls.maxDistance = size * 10
-      this.controls.reset()
-
-      this.camera.near = size / 100
-      this.camera.far = size * 100
-      this.camera.updateProjectionMatrix()
-
-      this.camera.position.copy(center);
-      this.camera.position.x += size / 2.0;
-      this.camera.position.y += size / 14.0;
-      this.camera.position.z += size / 1.5;
-      this.camera.lookAt(center);
-
-      // add scene
-      this.scene.add(this.monster)
-
-      // start animation
-      this.mixer = new THREE.AnimationMixer(this.monster)
-      const clip = THREE.AnimationClip.findByName(this.model.animations, action)
-      this.mixer.clipAction(clip).play()
-    },
+    loader.load(
+      path,
+      this.loadMonster,
       undefined,
       console.error.bind(console)
     )
 
+    // start scene
     this.start()
+  }
+
+  loadMonster = gltf => {
+    this.model = gltf
+
+    const { rotation, action } = this.props
+    const defaultRotation = { x: -0.1, y: 0.7, z: 0 }
+    const monsterRotation = { ...defaultRotation, ...rotation }
+
+    this.monster = this.model.scene
+    this.monster.updateMatrixWorld()
+
+    // center this.monster
+    const box = new THREE.Box3().setFromObject(this.monster)
+    const size = box.getSize(new THREE.Vector3()).length()
+    const center = box.getCenter(new THREE.Vector3())
+
+    this.monster.position.x += (this.monster.position.x - center.x)
+    this.monster.position.y += (this.monster.position.y - center.y)
+    this.monster.position.z += (this.monster.position.z - center.z)
+
+    // set model initial rotation
+    this.monster.rotation.x = monsterRotation.x
+    this.monster.rotation.y = monsterRotation.y
+    this.monster.rotation.z = monsterRotation.z
+
+    this.controls.maxDistance = size * 10
+    this.controls.reset()
+
+    this.camera.near = size / 100
+    this.camera.far = size * 100
+    this.camera.updateProjectionMatrix()
+
+    this.camera.position.copy(center);
+    this.camera.position.x += size / 2.0;
+    this.camera.position.y += size / 14.0;
+    this.camera.position.z += size / 1.5;
+    this.camera.lookAt(center);
+
+    // add scene
+    this.scene.add(this.monster)
+
+    // start animation
+    this.mixer = new THREE.AnimationMixer(this.monster)
+    this.mixer.clipAction(
+      THREE.AnimationClip.findByName(
+        this.model.animations, action
+      )
+    ).play()
   }
 
   onWindowsResize = () => {
@@ -135,24 +153,38 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
-  animateState = () => {
-    const { action } = this.props
-    if (this.mount) {
-      const clip = THREE.AnimationClip.findByName(this.model.animations, action)
-      this.mixer.stopAllAction()
-      this.mixer.clipAction(clip).play()
-    }
+  applyPropertyUpdate = () => {
+    const { autoRotate, autoRotateSpeed } = this.props
+    // controls
+    this.controls.autoRotate = autoRotate
+    this.controls.autoRotateSpeed = autoRotateSpeed
+  }
+
+  changeStateAnimation = () => {
+    this.mixer.stopAllAction()
+    this.mixer.clipAction(
+      THREE.AnimationClip.findByName(
+        this.model.animations,
+        this.props.action
+      )
+    ).play()
   }
 
   renderScene = () => {
-    this.renderer.render(this.scene, this.camera) 
+    this.renderer.render(this.scene, this.camera)
   }
 
   render() {
     const { size } = this.props
-    this.animateState()
+
+    if (this.mount) {
+      this.applyPropertyUpdate()
+      this.changeStateAnimation()
+    }
+
     return (
       <div
+        id="canvas-3d"
         style={{
           width: size.width,
           height: size.height
@@ -171,6 +203,11 @@ Monster3DProfile.propTypes = {
     )
   ),
   path: PropTypes.string.isRequired,
+  rotation: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    z: PropTypes.number
+  }),
   size: PropTypes.shape({
     width: PropTypes.string,
     height: PropTypes.string
@@ -178,19 +215,19 @@ Monster3DProfile.propTypes = {
   background: PropTypes.shape({
     color: PropTypes.string,
     alpha: PropTypes.number
-  })
+  }),
+  autoRotate: PropTypes.bool,
+  autoRotateSpeed: PropTypes.number
 }
 
 Monster3DProfile.defaultProps = {
   action: ActionType.SLEEPING,
   size: {
-    width: "600px",
+    width: "auto",
     height: "600px"
   },
-  background: {
-    color: "#00000",
-    alpha: 1
-  }
+  autoRotate: false,
+  autoRotateSpeed: -10
 }
 
 export { Monster3DProfile, ActionType }
