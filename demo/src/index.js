@@ -23,8 +23,8 @@ class App extends Component {
           typeId={5454543545454}
           action={this.state.currentAnimation}
           path={monster3D}
-          size={{ width: "auto", height: "500px" }}
-          background={{ color: "#322e3a", alpha: 1 }}
+          size={{ height: "500px" }}
+          background={{ alpha: 0 }}
         />
         <select
           value={this.state.currentAnimation}

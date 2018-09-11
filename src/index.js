@@ -4,6 +4,7 @@ import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
 import OrbitControls from './utils/OrbitControls'
+import "./index.css"
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -20,7 +21,15 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, action } = this.props
+    const { background, path, action, rotation } = this.props
+
+    // default values
+    const defaultRotation = { x: -0.1, y: 0.7, z: 0 }
+    const defaultBackground = { color: "#322e3a", alpha: 1 }
+
+    const monsterRotation = { ...defaultRotation, ...rotation }
+    const canvasBackground = { ...defaultBackground, ...background }
+
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -41,7 +50,7 @@ class Monster3DProfile extends Component {
 
     // add renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
-    this.renderer.setClearColor(background.color, background.alpha)
+    this.renderer.setClearColor(canvasBackground.color, canvasBackground.alpha)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
     this.renderer.gammaOutput = true
@@ -69,9 +78,10 @@ class Monster3DProfile extends Component {
       this.monster.position.y += (this.monster.position.y - center.y)
       this.monster.position.z += (this.monster.position.z - center.z)
 
-      // some rotation tweaking
-      this.monster.rotation.y = 0.7
-      this.monster.rotation.x = -0.1
+      // set model initial rotation
+      this.monster.rotation.x = monsterRotation.x
+      this.monster.rotation.y = monsterRotation.y
+      this.monster.rotation.z = monsterRotation.z
 
       this.controls.maxDistance = size * 10
       this.controls.reset()
@@ -91,8 +101,11 @@ class Monster3DProfile extends Component {
 
       // start animation
       this.mixer = new THREE.AnimationMixer(this.monster)
-      const clip = THREE.AnimationClip.findByName(this.model.animations, action)
-      this.mixer.clipAction(clip).play()
+      this.mixer.clipAction(
+        THREE.AnimationClip.findByName(
+          this.model.animations, action
+        )
+      ).play()
     },
       undefined,
       console.error.bind(console)
@@ -145,7 +158,7 @@ class Monster3DProfile extends Component {
   }
 
   renderScene = () => {
-    this.renderer.render(this.scene, this.camera) 
+    this.renderer.render(this.scene, this.camera)
   }
 
   render() {
@@ -153,6 +166,7 @@ class Monster3DProfile extends Component {
     this.animateState()
     return (
       <div
+        id="canvas-3d"
         style={{
           width: size.width,
           height: size.height
@@ -171,6 +185,11 @@ Monster3DProfile.propTypes = {
     )
   ),
   path: PropTypes.string.isRequired,
+  rotation: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    z: PropTypes.number
+  }),
   size: PropTypes.shape({
     width: PropTypes.string,
     height: PropTypes.string
@@ -186,10 +205,6 @@ Monster3DProfile.defaultProps = {
   size: {
     width: "auto",
     height: "600px"
-  },
-  background: {
-    color: "#00000",
-    alpha: 1
   }
 }
 
