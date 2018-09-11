@@ -29,8 +29,7 @@ class Monster3DProfile extends Component {
     this.scene = new THREE.Scene()
 
     // add camera
-    this.camera = new THREE.PerspectiveCamera(90, width / height, 0.25, 20)
-    this.camera.position.set(0, 0, 1.5)
+    this.camera = new THREE.PerspectiveCamera(70, width / height, 0.25, 1000)
     this.camera.updateProjectionMatrix()
 
     // setting controls
@@ -63,13 +62,29 @@ class Monster3DProfile extends Component {
       monster.updateMatrixWorld()
       // center monster
       const box = new THREE.Box3().setFromObject(monster)
+      const size = box.getSize(new THREE.Vector3()).length()
       const center = box.getCenter(new THREE.Vector3())
 
       monster.position.x += (monster.position.x - center.x)
       monster.position.y += (monster.position.y - center.y)
       monster.position.z += (monster.position.z - center.z)
 
+      // some tweaking
+      monster.rotation.y = 0.6
+      monster.rotation.z = 0
+
+      this.controls.maxDistance = size * 10
       this.controls.reset()
+
+      this.camera.near = size / 100
+      this.camera.far = size * 100
+      this.camera.updateProjectionMatrix()
+
+      this.camera.position.copy(center);
+      this.camera.position.x += size / 2.0;
+      this.camera.position.y += size / 14.0;
+      this.camera.position.z += size / 1.5;
+      this.camera.lookAt(center);
 
       // add scene
       this.scene.add(monster)
