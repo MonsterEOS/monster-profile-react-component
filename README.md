@@ -1,16 +1,36 @@
 # react-monstereos-profile
 
-[![Travis][build-badge]][build]
-[![npm package][npm-badge]][npm]
-[![Coveralls][coveralls-badge]][coveralls]
+## How to install
+Execute:
+```
+npm install --save https://github.com/VertexStudio/monster-profile-react-component
+```
 
-Describe react-monstereos-profile here.
+Then, install its peer dependencies:
+```
+npm install --save react@16.x three@^0.96.0
+```
 
-[build-badge]: https://img.shields.io/travis/user/repo/master.png?style=flat-square
-[build]: https://travis-ci.org/user/repo
+## Usage
 
-[npm-badge]: https://img.shields.io/npm/v/npm-package.png?style=flat-square
-[npm]: https://www.npmjs.org/package/npm-package
+```javascript
+import React from 'react'
+import { Monster3DProfile, ActionType } from 'react-monstereos-profile'
 
-[coveralls-badge]: https://img.shields.io/coveralls/user/repo/master.png?style=flat-square
-[coveralls]: https://coveralls.io/github/user/repo
+const Monster = () =>
+    <Monster3DProfile
+        typeId="aa5a4sd4d5as4d"
+        action={ActionType.IDLE}
+        path={monster3D}
+        size={{ width: "400px", height: "500px" }}
+        background={{ color: "#322e3a", alpha: 1 }}
+    />
+```
+### Component properties
+| Name       | Type     | Default                             | Description                            |
+| ---------- | -------- | ----------------------------------- | -------------------------------------- |
+| typeId     | `string` |                                     | Monster ID.                            |
+| action     | `number` | `0`                                 | IDLE monster state.                    |
+| path       | `string` |                                     | Path to .gltf file (monster 3D model). |
+| size       | `object` | `{width: "600px", height: "600px"}` | Canvas dimensions.                     |
+| background | `object` | `{color: "#00000", alpha: 1 }`      | Canvas background configuration        |
