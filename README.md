@@ -35,3 +35,11 @@ const Monster = () =>
 | path       | `string` |                                     | Path to .gltf file (monster 3D model). |
 | size       | `object` | `{width: "600px", height: "600px"}` | Canvas dimensions.                     |
 | background | `object` | `{color: "#00000", alpha: 1 }`      | Canvas background configuration        |
+
+
+## Run demo
+
+1. Clone the repository.
+2. `cd` into the directory of the repo.
+3. Execute `npm install`.
+4. Execute `npm start`.
