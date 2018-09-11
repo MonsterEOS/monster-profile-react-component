@@ -35,11 +35,12 @@ class App extends Component {
               <option
                 key={action}
                 value={ActionType[action]}>
-                {ActionType[action]}
+                {action}
               </option>
             )
           )}
         </select>
+        <p>NOTE: SLEEPING, FEEDING and DEAD are defaulting to IDLE for now.</p>
       </Fragment>
     )
   }
