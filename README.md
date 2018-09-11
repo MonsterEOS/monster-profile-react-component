@@ -28,13 +28,13 @@ const Monster = () =>
     
 ```
 ### Component properties
-| Name       | Type     | Default                             | Description                            |
-| ---------- | -------- | ----------------------------------- | -------------------------------------- |
-| typeId     | `number` |                                     | Monster ID.                            |
-| action     | `string` | `IDLE`                              | Monster state (animation name).        |
-| path       | `string` |                                     | Path to .gltf file (monster 3D model). |
-| size       | `object` | `{width: "600px", height: "600px"}` | Canvas dimensions.                     |
-| background | `object` | `{color: "#00000", alpha: 1 }`      | Canvas background configuration        |
+| Name       | Type     | Default                            | Description                            |
+| ---------- | -------- | ---------------------------------- | -------------------------------------- |
+| typeId     | `number` |                                    | Monster ID.                            |
+| action     | `string` | `IDLE`                             | Monster state (animation name).        |
+| path       | `string` |                                    | Path to .gltf file (monster 3D model). |
+| size       | `object` | `{width: "auto", height: "600px"}` | Canvas dimensions.                     |
+| background | `object` | `{color: "#00000", alpha: 1 }`     | Canvas background configuration        |
 
 
 ## Run demo

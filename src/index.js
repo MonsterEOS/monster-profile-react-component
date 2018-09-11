@@ -184,7 +184,7 @@ Monster3DProfile.propTypes = {
 Monster3DProfile.defaultProps = {
   action: ActionType.SLEEPING,
   size: {
-    width: "600px",
+    width: "auto",
     height: "600px"
   },
   background: {
