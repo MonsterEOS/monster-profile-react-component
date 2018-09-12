@@ -51,7 +51,7 @@ class Monster3DProfile extends Component {
     this.renderer.gammaOutput = true
     this.mount.appendChild(this.renderer.domElement)
 
-    // add light
+    // add white light
     this.light = new THREE.AmbientLight(0xffffff, 1.1)
     this.light.position.set(0, 1, 0)
     this.scene.add(this.light)
@@ -89,9 +89,13 @@ class Monster3DProfile extends Component {
     const size = box.getSize(new THREE.Vector3()).length()
     const center = box.getCenter(new THREE.Vector3())
 
-    this.monster.position.x += (this.monster.position.x + 0 - center.x)
-    this.monster.position.y += (this.monster.position.y + 0 - center.y)
-    this.monster.position.z += (this.monster.position.z + 0 - center.z)
+    this.monster.position.x += (this.monster.position.x - center.x)
+    this.monster.position.y += (this.monster.position.y - center.y)
+    this.monster.position.z += (this.monster.position.z - center.z)
+
+    // get it closer
+    this.monster.position.z += 80
+    this.monster.position.x += 55
 
     // set model initial rotation
     this.monster.rotation.x = monsterRotation.x
@@ -106,10 +110,10 @@ class Monster3DProfile extends Component {
     this.camera.updateProjectionMatrix()
 
     this.camera.position.copy(center)
+    this.camera.lookAt(center)
     this.camera.position.x += size / 2.0
     this.camera.position.y += size / 14
     this.camera.position.z += size / 1.5
-    this.camera.lookAt(center)
 
     this.camera.position.y += -5
 
@@ -166,6 +170,8 @@ class Monster3DProfile extends Component {
   }
 
   darkenMonster = () => {
+    // resetting camera
+    this.camera.copy(this.backupCamera)
     // dark light
     this.light.color.setHex(0x0f0f0f)
     // disable controls
@@ -189,6 +195,7 @@ class Monster3DProfile extends Component {
     } else {
       this.clearScreen()
     }
+    this.onWindowsResize
   }
 
   applyPropertyUpdate = () => {
@@ -262,7 +269,7 @@ Monster3DProfile.propTypes = {
 }
 
 Monster3DProfile.defaultProps = {
-  action: ActionType.SLEEPING,
+  action: ActionType.IDLE,
   size: {
     width: "auto",
     height: "600px"
