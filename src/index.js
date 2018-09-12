@@ -21,7 +21,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path } = this.props
+    const { background, path, zoom } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -39,8 +39,9 @@ class Monster3DProfile extends Component {
 
     // setting controls
     this.controls = new OrbitControls(this.camera, this.mount)
-    this.controls.target.set(0, -0.2, -0.2)
+    this.controls.target.set(0, 0, 0)
     this.controls.screenSpacePanning = true
+    this.controls.enableZoom = zoom
     this.controls.update()
 
     // add renderer
@@ -51,10 +52,10 @@ class Monster3DProfile extends Component {
     this.renderer.gammaOutput = true
     this.mount.appendChild(this.renderer.domElement)
 
-    // add light
-    const light = new THREE.AmbientLight(0xffffff, 1.1)
-    light.position.set(0, 1, 0)
-    this.scene.add(light)
+    // add white light
+    this.light = new THREE.AmbientLight(0xffffff, 1.1)
+    this.light.position.set(0, 1, 0)
+    this.scene.add(this.light)
 
     // loading monster with GLTF loader
     const loader = new GLTFLoader()
@@ -79,12 +80,12 @@ class Monster3DProfile extends Component {
     this.monster = this.model.scene.children[0]
 
     const { rotation, action } = this.props
-    const defaultRotation = { x: -0.1, y: 0.7, z: 0 }
+    const defaultRotation = { x: -0.1, y: 0.6, z: 0 }
     const monsterRotation = { ...defaultRotation, ...rotation }
 
     this.monster.updateMatrixWorld()
 
-    // center this.monster
+    // center monster
     const box = new THREE.Box3().setFromObject(this.monster)
     const size = box.getSize(new THREE.Vector3()).length()
     const center = box.getCenter(new THREE.Vector3())
@@ -92,6 +93,10 @@ class Monster3DProfile extends Component {
     this.monster.position.x += (this.monster.position.x - center.x)
     this.monster.position.y += (this.monster.position.y - center.y)
     this.monster.position.z += (this.monster.position.z - center.z)
+
+    // get it closer (makes the rotation weird)
+    this.monster.position.z += 80
+    this.monster.position.x += 55
 
     // set model initial rotation
     this.monster.rotation.x = monsterRotation.x
@@ -106,18 +111,20 @@ class Monster3DProfile extends Component {
     this.camera.updateProjectionMatrix()
 
     this.camera.position.copy(center)
+    this.camera.lookAt(center)
     this.camera.position.x += size / 2.0
     this.camera.position.y += size / 14
     this.camera.position.z += size / 1.5
-    this.camera.lookAt(center)
 
+    this.camera.updateProjectionMatrix()
+    // backup camera to restore it later
     this.backupCamera = this.camera.clone()
 
     // add scene
     this.scene.add(this.monster)
 
-    // darken or clear screen according to current 'action'
-    this.screenState(action)
+    // darken or clear the monster according to current 'action'
+    this.monsterColorState(action)
 
     // start animation
     this.mixer = new THREE.AnimationMixer(this.monster)
@@ -131,10 +138,6 @@ class Monster3DProfile extends Component {
   onWindowsResize = () => {
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
-
-    if (this.plane) {
-      this.plane.scale.set(width, height, 1)
-    }
 
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
@@ -156,7 +159,6 @@ class Monster3DProfile extends Component {
     cancelAnimationFrame(this.frameId)
   }
 
-
   animate = (time) => {
     this.frameId = window.requestAnimationFrame(this.animate)
     const delta = (time - this.prevTime) / 1000
@@ -167,51 +169,33 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
-  darkenScreen = () => {
-    const width = this.mount.clientWidth
-    const height = this.mount.clientHeight
-
+  darkenMonster = () => {
     // resetting camera
     this.camera.copy(this.backupCamera)
-
-    // adding plane to darken monster
-    const geometry = new THREE.PlaneGeometry(width, height)
-    const material = new THREE.MeshBasicMaterial({
-      color: 0x000000,
-      transparent: true,
-      opacity: 0.7
-    })
-    this.plane = new THREE.Mesh(geometry, material)
-
-    this.plane.rotation.copy(this.monster.rotation)
-    // place it in front of the monster
-    this.plane.position.z += 60
-
-    // disable controls, so no one notices it's a plane
+    // dark light
+    this.light.color.setHex(0x0f0f0f)
+    // disable controls
     this.controls.enabled = false
-
-    this.scene.add(this.plane)
   }
 
   clearScreen = () => {
-    if (this.plane) {
-      this.scene.remove(this.plane)
-      this.plane = undefined
-      this.controls.enabled = true
-    }
+    // white light
+    this.light.color.setHex(0xffffff)
+    this.light.intensity = 1.1
+    // enable controls
+    this.controls.enabled = true
   }
 
-  screenState = (action) => {
+  monsterColorState = (action) => {
     if (
       action === ActionType.SLEEPING ||
       action === ActionType.DEAD
     ) {
-      if (!this.plane) {
-        this.darkenScreen()
-      }
+      this.darkenMonster()
     } else {
       this.clearScreen()
     }
+    this.onWindowsResize
   }
 
   applyPropertyUpdate = () => {
@@ -221,7 +205,7 @@ class Monster3DProfile extends Component {
     this.controls.autoRotateSpeed = autoRotateSpeed
 
     // action (state animation)
-    this.screenState(action)
+    this.monsterColorState(action)
   }
 
   changeStateAnimation = () => {
@@ -246,10 +230,9 @@ class Monster3DProfile extends Component {
       this.changeStateAnimation()
     }
 
-
     return (
       <div
-        id="canvas-3d"
+        id="profile-3d"
         style={{
           width: size.width,
           height: size.height
@@ -282,17 +265,19 @@ Monster3DProfile.propTypes = {
     alpha: PropTypes.number
   }),
   autoRotate: PropTypes.bool,
-  autoRotateSpeed: PropTypes.number
+  autoRotateSpeed: PropTypes.number,
+  zoom: PropTypes.bool
 }
 
 Monster3DProfile.defaultProps = {
-  action: ActionType.SLEEPING,
+  action: ActionType.IDLE,
   size: {
     width: "auto",
     height: "600px"
   },
   autoRotate: false,
-  autoRotateSpeed: -10
+  autoRotateSpeed: -10,
+  zoom: true
 }
 
 export { Monster3DProfile, ActionType }

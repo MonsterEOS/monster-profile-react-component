@@ -23,8 +23,9 @@ class App extends Component {
           typeId={5454543545454}
           action={this.state.currentAnimation}
           path={monster3D}
-          size={{ height: "500px" }}
-          background={{ alpha: 0 }}
+          size={{ height: "300px" }}
+          background={{ alpha: 1 }}
+          zoom={false}
         />
         <select
           value={this.state.currentAnimation}
@@ -41,7 +42,7 @@ class App extends Component {
           )}
         </select>
         <p><b>NOTE:</b> SLEEPING, FEEDING and DEAD are defaulting to <mark>IDLE</mark> for now.</p>
-        <p>IDLE action is triggering the dark screen (it's supposed to happen for SLEEPING and DEAD).</p>
+        <p>IDLE action is triggering the dark monster (it's supposed to happen for SLEEPING and DEAD).</p>
       </Fragment>
     )
   }
