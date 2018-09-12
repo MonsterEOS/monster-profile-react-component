@@ -76,12 +76,12 @@ class Monster3DProfile extends Component {
 
   loadMonster = gltf => {
     this.model = gltf
+    this.monster = this.model.scene.children[0]
 
     const { rotation, action } = this.props
     const defaultRotation = { x: -0.1, y: 0.7, z: 0 }
     const monsterRotation = { ...defaultRotation, ...rotation }
 
-    this.monster = this.model.scene
     this.monster.updateMatrixWorld()
 
     // center this.monster
@@ -105,19 +105,16 @@ class Monster3DProfile extends Component {
     this.camera.far = size * 100
     this.camera.updateProjectionMatrix()
 
-    this.camera.position.copy(center);
-    this.camera.position.x += size / 2.0;
-    this.camera.position.y += size / 14.0;
-    this.camera.position.z += size / 1.5;
-    this.camera.lookAt(center);
-
-    this.cameraOriginal = {}
-    this.cameraOriginal.position = this.camera.position
-    this.cameraOriginal.rotation = this.camera.rotation
+    this.camera.position.copy(center)
+    this.camera.position.x += size / 2.0
+    this.camera.position.y += size / 14.0
+    this.camera.position.z += size / 1.5
+    this.camera.lookAt(center)
 
     // add scene
     this.scene.add(this.monster)
 
+    // darken or clear screen according to current 'action'
     this.screenState(action)
 
     // start animation
@@ -132,6 +129,10 @@ class Monster3DProfile extends Component {
   onWindowsResize = () => {
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
+
+    if (this.plane) {
+      this.plane.scale.set(width, height, 1)
+    }
 
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
@@ -168,14 +169,6 @@ class Monster3DProfile extends Component {
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
-    // reset camera
-    // this.camera.position.x = this.cameraOriginal.position.x
-    // this.camera.position.y = this.cameraOriginal.position.y
-    // this.camera.position.z = this.cameraOriginal.position.z
-    // this.camera.rotation.x = this.cameraOriginal.rotation.x
-    // this.camera.rotation.y = this.cameraOriginal.rotation.y
-    // this.camera.rotation.z = this.cameraOriginal.rotation.z
-
     // adding plane to darken monster
     const geometry = new THREE.PlaneGeometry(width, height)
     const material = new THREE.MeshBasicMaterial({
@@ -204,7 +197,10 @@ class Monster3DProfile extends Component {
   }
 
   screenState = (action) => {
-    if (action === ActionType.SLEEPING || action === ActionType.DEAD) {
+    if (
+      action === ActionType.SLEEPING ||
+      action === ActionType.DEAD
+    ) {
       if (!this.plane) {
         this.darkenScreen()
       }
@@ -218,7 +214,7 @@ class Monster3DProfile extends Component {
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
-    
+
     // action (state animation)
     this.screenState(action)
   }
