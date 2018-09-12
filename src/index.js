@@ -84,14 +84,14 @@ class Monster3DProfile extends Component {
 
     this.monster.updateMatrixWorld()
 
-    // center this.monster
+    // center monster
     const box = new THREE.Box3().setFromObject(this.monster)
     const size = box.getSize(new THREE.Vector3()).length()
     const center = box.getCenter(new THREE.Vector3())
 
-    this.monster.position.x += (this.monster.position.x - center.x)
-    this.monster.position.y += (this.monster.position.y - center.y)
-    this.monster.position.z += (this.monster.position.z - center.z)
+    this.monster.position.x += (this.monster.position.x + 50 - center.x)
+    this.monster.position.y += (this.monster.position.y + 0 - center.y)
+    this.monster.position.z += (this.monster.position.z + 50 - center.z)
 
     // set model initial rotation
     this.monster.rotation.x = monsterRotation.x
@@ -111,6 +111,7 @@ class Monster3DProfile extends Component {
     this.camera.position.z += size / 1.5
     this.camera.lookAt(center)
 
+    // backup camera to restore it later
     this.backupCamera = this.camera.clone()
 
     // add scene
@@ -190,6 +191,7 @@ class Monster3DProfile extends Component {
     // disable controls, so no one notices it's a plane
     this.controls.enabled = false
 
+    this.onWindowsResize()
     this.scene.add(this.plane)
   }
 
