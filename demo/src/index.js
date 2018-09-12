@@ -40,7 +40,8 @@ class App extends Component {
             )
           )}
         </select>
-        <p>NOTE: SLEEPING, FEEDING and DEAD are defaulting to IDLE for now.</p>
+        <p><b>NOTE:</b> SLEEPING, FEEDING and DEAD are defaulting to <mark>IDLE</mark> for now.</p>
+        <p>IDLE action is triggering the dark screen (it's supposed to happen for SLEEPING and DEAD).</p>
       </Fragment>
     )
   }

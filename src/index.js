@@ -98,7 +98,7 @@ class Monster3DProfile extends Component {
     this.monster.rotation.y = monsterRotation.y
     this.monster.rotation.z = monsterRotation.z
 
-    this.controls.maxDistance = size * 10
+    this.controls.maxDistance = size * 1
     this.controls.reset()
 
     this.camera.near = size / 100
@@ -107,9 +107,11 @@ class Monster3DProfile extends Component {
 
     this.camera.position.copy(center)
     this.camera.position.x += size / 2.0
-    this.camera.position.y += size / 14.0
+    this.camera.position.y += size / 14
     this.camera.position.z += size / 1.5
     this.camera.lookAt(center)
+
+    this.backupCamera = this.camera.clone()
 
     // add scene
     this.scene.add(this.monster)
@@ -168,6 +170,9 @@ class Monster3DProfile extends Component {
   darkenScreen = () => {
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
+
+    // resetting camera
+    this.camera.copy(this.backupCamera)
 
     // adding plane to darken monster
     const geometry = new THREE.PlaneGeometry(width, height)
