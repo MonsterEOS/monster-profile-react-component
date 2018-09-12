@@ -35,11 +35,13 @@ class App extends Component {
               <option
                 key={action}
                 value={ActionType[action]}>
-                {ActionType[action]}
+                {action}
               </option>
             )
           )}
         </select>
+        <p><b>NOTE:</b> SLEEPING, FEEDING and DEAD are defaulting to <mark>IDLE</mark> for now.</p>
+        <p>IDLE action is triggering the dark screen (it's supposed to happen for SLEEPING and DEAD).</p>
       </Fragment>
     )
   }

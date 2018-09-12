@@ -62,7 +62,11 @@ class Monster3DProfile extends Component {
     loader.load(
       path,
       this.loadMonster,
-      undefined,
+      // TODO: add a loader.
+      event => {
+        const percentage = (event.loaded / event.total) * 100
+        console.log(`Loading 3D model... ${Math.round(percentage)}%`)
+      },
       console.error.bind(console)
     )
 
@@ -72,12 +76,12 @@ class Monster3DProfile extends Component {
 
   loadMonster = gltf => {
     this.model = gltf
+    this.monster = this.model.scene.children[0]
 
     const { rotation, action } = this.props
     const defaultRotation = { x: -0.1, y: 0.7, z: 0 }
     const monsterRotation = { ...defaultRotation, ...rotation }
 
-    this.monster = this.model.scene
     this.monster.updateMatrixWorld()
 
     // center this.monster
@@ -94,21 +98,26 @@ class Monster3DProfile extends Component {
     this.monster.rotation.y = monsterRotation.y
     this.monster.rotation.z = monsterRotation.z
 
-    this.controls.maxDistance = size * 10
+    this.controls.maxDistance = size * 1
     this.controls.reset()
 
     this.camera.near = size / 100
     this.camera.far = size * 100
     this.camera.updateProjectionMatrix()
 
-    this.camera.position.copy(center);
-    this.camera.position.x += size / 2.0;
-    this.camera.position.y += size / 14.0;
-    this.camera.position.z += size / 1.5;
-    this.camera.lookAt(center);
+    this.camera.position.copy(center)
+    this.camera.position.x += size / 2.0
+    this.camera.position.y += size / 14
+    this.camera.position.z += size / 1.5
+    this.camera.lookAt(center)
+
+    this.backupCamera = this.camera.clone()
 
     // add scene
     this.scene.add(this.monster)
+
+    // darken or clear screen according to current 'action'
+    this.screenState(action)
 
     // start animation
     this.mixer = new THREE.AnimationMixer(this.monster)
@@ -122,6 +131,10 @@ class Monster3DProfile extends Component {
   onWindowsResize = () => {
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
+
+    if (this.plane) {
+      this.plane.scale.set(width, height, 1)
+    }
 
     this.camera.aspect = width / height
     this.camera.updateProjectionMatrix()
@@ -143,6 +156,7 @@ class Monster3DProfile extends Component {
     cancelAnimationFrame(this.frameId)
   }
 
+
   animate = (time) => {
     this.frameId = window.requestAnimationFrame(this.animate)
     const delta = (time - this.prevTime) / 1000
@@ -153,11 +167,61 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
+  darkenScreen = () => {
+    const width = this.mount.clientWidth
+    const height = this.mount.clientHeight
+
+    // resetting camera
+    this.camera.copy(this.backupCamera)
+
+    // adding plane to darken monster
+    const geometry = new THREE.PlaneGeometry(width, height)
+    const material = new THREE.MeshBasicMaterial({
+      color: 0x000000,
+      transparent: true,
+      opacity: 0.7
+    })
+    this.plane = new THREE.Mesh(geometry, material)
+
+    this.plane.rotation.copy(this.monster.rotation)
+    // place it in front of the monster
+    this.plane.position.z += 60
+
+    // disable controls, so no one notices it's a plane
+    this.controls.enabled = false
+
+    this.scene.add(this.plane)
+  }
+
+  clearScreen = () => {
+    if (this.plane) {
+      this.scene.remove(this.plane)
+      this.plane = undefined
+      this.controls.enabled = true
+    }
+  }
+
+  screenState = (action) => {
+    if (
+      action === ActionType.SLEEPING ||
+      action === ActionType.DEAD
+    ) {
+      if (!this.plane) {
+        this.darkenScreen()
+      }
+    } else {
+      this.clearScreen()
+    }
+  }
+
   applyPropertyUpdate = () => {
-    const { autoRotate, autoRotateSpeed } = this.props
+    const { autoRotate, autoRotateSpeed, action } = this.props
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
+
+    // action (state animation)
+    this.screenState(action)
   }
 
   changeStateAnimation = () => {
@@ -181,6 +245,7 @@ class Monster3DProfile extends Component {
       this.applyPropertyUpdate()
       this.changeStateAnimation()
     }
+
 
     return (
       <div
