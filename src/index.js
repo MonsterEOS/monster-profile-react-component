@@ -21,7 +21,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path } = this.props
+    const { background, path, zoom } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -39,8 +39,9 @@ class Monster3DProfile extends Component {
 
     // setting controls
     this.controls = new OrbitControls(this.camera, this.mount)
-    this.controls.target.set(0, -0.2, -0.2)
+    this.controls.target.set(0, 0, 0)
     this.controls.screenSpacePanning = true
+    this.controls.enableZoom = zoom
     this.controls.update()
 
     // add renderer
@@ -93,7 +94,7 @@ class Monster3DProfile extends Component {
     this.monster.position.y += (this.monster.position.y - center.y)
     this.monster.position.z += (this.monster.position.z - center.z)
 
-    // get it closer
+    // get it closer (makes the rotation weird)
     this.monster.position.z += 80
     this.monster.position.x += 55
 
@@ -115,8 +116,7 @@ class Monster3DProfile extends Component {
     this.camera.position.y += size / 14
     this.camera.position.z += size / 1.5
 
-    this.camera.position.y += -5
-
+    this.camera.updateProjectionMatrix()
     // backup camera to restore it later
     this.backupCamera = this.camera.clone()
 
@@ -265,7 +265,8 @@ Monster3DProfile.propTypes = {
     alpha: PropTypes.number
   }),
   autoRotate: PropTypes.bool,
-  autoRotateSpeed: PropTypes.number
+  autoRotateSpeed: PropTypes.number,
+  zoom: PropTypes.bool
 }
 
 Monster3DProfile.defaultProps = {
@@ -275,7 +276,8 @@ Monster3DProfile.defaultProps = {
     height: "600px"
   },
   autoRotate: false,
-  autoRotateSpeed: -10
+  autoRotateSpeed: -10,
+  zoom: true
 }
 
 export { Monster3DProfile, ActionType }

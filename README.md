@@ -24,6 +24,7 @@ const Monster = () =>
         path={monster3D}
         size={{ height: "500px" }}
         background={{ color: "#322e3a", alpha: 1 }}
+        zoom={false}
     />
 ```
 
@@ -36,6 +37,7 @@ const Monster = () =>
 | rotation        | `object` | `{ x: -0.1, y: 0.7, z: 0 }`          | Initial monster's rotation.                    |
 | autoRotate      | `bool`   | `false`                              | Enables autorotation.                          |
 | autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed. |
+| zoom            | `bool`   | `true`                               | Enables zoom.                                  |
 | size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                             |
 | background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.               |
 

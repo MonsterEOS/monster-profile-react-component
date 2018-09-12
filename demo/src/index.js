@@ -25,6 +25,7 @@ class App extends Component {
           path={monster3D}
           size={{ height: "300px" }}
           background={{ alpha: 1 }}
+          zoom={false}
         />
         <select
           value={this.state.currentAnimation}
