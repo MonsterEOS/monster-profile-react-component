@@ -40,6 +40,7 @@ const Monster = () =>
 | zoom            | `bool`   | `true`                               | Enables zoom.                                  |
 | size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                             |
 | background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.               |
+| lightIntensity  | `number` | `1.7`                                | Point light intensity.                         |
 
 
 ## Run demo
