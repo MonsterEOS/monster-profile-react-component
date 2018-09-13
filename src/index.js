@@ -4,7 +4,8 @@ import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
 import OrbitControls from './utils/OrbitControls'
-import "./index.css"
+import injectSheet from 'react-jss'
+import styles from './styles'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -223,7 +224,7 @@ class Monster3DProfile extends Component {
   }
 
   render() {
-    const { size } = this.props
+    const { size, classes } = this.props
 
     if (this.mount) {
       this.applyPropertyUpdate()
@@ -232,7 +233,7 @@ class Monster3DProfile extends Component {
 
     return (
       <div
-        id="profile-3d"
+        className={classes.profile3D}
         style={{
           width: size.width,
           height: size.height
@@ -279,5 +280,7 @@ Monster3DProfile.defaultProps = {
   autoRotateSpeed: -10,
   zoom: true
 }
+
+Monster3DProfile = injectSheet(styles)(Monster3DProfile)
 
 export { Monster3DProfile, ActionType }

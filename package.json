@@ -30,6 +30,7 @@
     "nwb": "0.23.x",
     "react": "^16.5.0",
     "react-dom": "^16.5.0",
+    "react-jss": "^8.6.1",
     "three": "^0.96.0"
   },
   "author": "VertexStudio",
