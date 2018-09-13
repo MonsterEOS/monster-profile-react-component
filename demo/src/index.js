@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
 import monster3D from './assets/models/Devil.gltf'
+import sleeping from './assets/models/cube.obj'
 import { Monster3DProfile, ActionType } from '../../src'
 
 class App extends Component {
@@ -26,6 +27,7 @@ class App extends Component {
           size={{ height: "300px" }}
           background={{ alpha: 1 }}
           zoom={false}
+          sleeping={sleeping}
         />
         <select
           value={this.state.currentAnimation}

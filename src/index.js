@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
+import OBJLoader from './utils/OBJLoader'
 import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
@@ -22,7 +23,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, zoom } = this.props
+    const { background, path, sleeping, zoom } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -59,9 +60,8 @@ class Monster3DProfile extends Component {
     this.scene.add(this.light)
 
     // loading monster with GLTF loader
-    const loader = new GLTFLoader()
-
-    loader.load(
+    const gltfLoader = new GLTFLoader()
+    gltfLoader.load(
       path,
       this.loadMonster,
       // TODO: add a loader.
@@ -71,6 +71,19 @@ class Monster3DProfile extends Component {
       },
       console.error.bind(console)
     )
+
+    // loading sleeping animation with OBJ loader
+    const objLoader = new OBJLoader()
+    objLoader.load(sleeping, (element) => {
+      const material = new THREE.MeshBasicMaterial()
+      element.traverse((child) => {
+        if (child instanceof THREE.Mesh) {
+          child.material = material
+        }
+      })
+
+      this.scene.add(element)
+    })
 
     // start scene
     this.start()
