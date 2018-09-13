@@ -27,7 +27,6 @@ class App extends Component {
           size={{ height: "300px" }}
           background={{ alpha: 1 }}
           zoom={false}
-          sleeping={sleeping}
         />
         <select
           value={this.state.currentAnimation}

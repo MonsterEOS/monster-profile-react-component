@@ -23,7 +23,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, sleeping, zoom } = this.props
+    const { background, path, zoom, lightIntensity } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -31,6 +31,8 @@ class Monster3DProfile extends Component {
 
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
+
+    this.ambientalLightIntensity = 0.15
 
     // add scene
     this.scene = new THREE.Scene()
@@ -54,10 +56,23 @@ class Monster3DProfile extends Component {
     this.renderer.gammaOutput = true
     this.mount.appendChild(this.renderer.domElement)
 
-    // add white light
-    this.light = new THREE.AmbientLight(0xffffff, 1.1)
+    // add ambiental white light
+    this.light = new THREE.AmbientLight(0xffffff, this.ambientalLightIntensity)
     this.light.position.set(0, 1, 0)
     this.scene.add(this.light)
+
+    // add point white light
+    const pointLightSphere = new THREE.SphereBufferGeometry(20, 16, 8)
+
+    this.pointLight = new THREE.PointLight(0xffffff, lightIntensity, 1000)
+    this.pointLight.add(new THREE.Mesh(
+      pointLightSphere,
+      new THREE.MeshBasicMaterial({ color: 0xffffff })
+    ))
+
+    // make it child of the camera and add it to the scene
+    this.camera.add(this.pointLight)
+    this.scene.add(this.camera)
 
     // loading monster with GLTF loader
     const gltfLoader = new GLTFLoader()
@@ -71,19 +86,6 @@ class Monster3DProfile extends Component {
       },
       console.error.bind(console)
     )
-
-    // loading sleeping animation with OBJ loader
-    const objLoader = new OBJLoader()
-    objLoader.load(sleeping, (element) => {
-      const material = new THREE.MeshBasicMaterial()
-      element.traverse((child) => {
-        if (child instanceof THREE.Mesh) {
-          child.material = material
-        }
-      })
-
-      this.scene.add(element)
-    })
 
     // start scene
     this.start()
@@ -122,7 +124,6 @@ class Monster3DProfile extends Component {
 
     this.camera.near = size / 100
     this.camera.far = size * 100
-    this.camera.updateProjectionMatrix()
 
     this.camera.position.copy(center)
     this.camera.lookAt(center)
@@ -185,17 +186,25 @@ class Monster3DProfile extends Component {
 
   darkenMonster = () => {
     // resetting camera
-    this.camera.copy(this.backupCamera)
+    this.camera.position.x = this.backupCamera.position.x
+    this.camera.position.y = this.backupCamera.position.y
+    this.camera.position.z = this.backupCamera.position.z
+    this.camera.rotation.set(this.backupCamera.rotation)
+    this.camera.updateProjectionMatrix()
     // dark light
     this.light.color.setHex(0x0f0f0f)
+    this.pointLight.color.setHex(0x000000)
     // disable controls
     this.controls.enabled = false
   }
 
-  clearScreen = () => {
+  clearMonster = () => {
+    const { lightIntensity } = this.props
     // white light
     this.light.color.setHex(0xffffff)
-    this.light.intensity = 1.1
+    this.light.intensity = this.ambientalLightIntensity
+    this.pointLight.color.setHex(0xffffff)
+    this.pointLight.intensity = lightIntensity
     // enable controls
     this.controls.enabled = true
   }
@@ -207,7 +216,7 @@ class Monster3DProfile extends Component {
     ) {
       this.darkenMonster()
     } else {
-      this.clearScreen()
+      this.clearMonster()
     }
     this.onWindowsResize
   }
@@ -280,7 +289,8 @@ Monster3DProfile.propTypes = {
   }),
   autoRotate: PropTypes.bool,
   autoRotateSpeed: PropTypes.number,
-  zoom: PropTypes.bool
+  zoom: PropTypes.bool,
+  lightIntensity: PropTypes.number
 }
 
 Monster3DProfile.defaultProps = {
@@ -291,7 +301,8 @@ Monster3DProfile.defaultProps = {
   },
   autoRotate: false,
   autoRotateSpeed: -10,
-  zoom: true
+  zoom: true,
+  lightIntensity: 1.7
 }
 
 Monster3DProfile = injectSheet(styles)(Monster3DProfile)
