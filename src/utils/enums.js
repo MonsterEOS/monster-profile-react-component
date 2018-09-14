@@ -1,7 +1,8 @@
 export const ActionType = {
-    IDLE: "IDLE", 
-    ATTACK: "ATTACK", 
-    SLEEPING: "IDLE", // SLEEPING: "SLEEPING", 
-    FEEDING: "IDLE", // FEEDING: "FEEDING", 
-    DEAD: "IDLE", // DEAD: "DEAD"
+    IDLE: "Idle", 
+    ATTACK: "Attack",
+    HIT_REACT: "HitReact",
+    SLEEPING: "Idle", // SLEEPING: "Sleeping", 
+    FEEDING: "Idle", // FEEDING: "Feeding", 
+    DEAD: "Idle", // DEAD: "Dead"
 }
