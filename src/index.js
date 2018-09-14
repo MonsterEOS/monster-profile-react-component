@@ -95,9 +95,11 @@ class Monster3DProfile extends Component {
     this.model = gltf
     this.monster = this.model.scene.children[0]
 
-    const { rotation, action } = this.props
-    const defaultRotation = { x: -0.1, y: 0.6, z: 0 }
+    const { rotation, action, position } = this.props
+    const defaultRotation = { x: 0, y: 0, z: 0 }
     const monsterRotation = { ...defaultRotation, ...rotation }
+    const defaultPosition = { x: 0, y: 0, z: 0 }
+    const monsterPosition = { ...defaultPosition, ...position }
 
     this.monster.updateMatrixWorld()
 
@@ -106,13 +108,19 @@ class Monster3DProfile extends Component {
     const size = box.getSize(new THREE.Vector3()).length()
     const center = box.getCenter(new THREE.Vector3())
 
+    // clipping planes
+    this.camera.near = size / 100
+    this.camera.far = size * 100
+
+    // set monster initial position
     this.monster.position.x += (this.monster.position.x - center.x)
     this.monster.position.y += (this.monster.position.y - center.y)
     this.monster.position.z += (this.monster.position.z - center.z)
 
-    // get it closer (makes the rotation weird)
-    this.monster.position.z += 80
-    this.monster.position.x += 55
+    // set monster position relative to initial position
+    this.monster.position.x += monsterPosition.x
+    this.monster.position.y += monsterPosition.y
+    this.monster.position.z += monsterPosition.z
 
     // set model initial rotation
     this.monster.rotation.x = monsterRotation.x
@@ -122,16 +130,14 @@ class Monster3DProfile extends Component {
     this.controls.maxDistance = size * 1
     this.controls.reset()
 
-    this.camera.near = size / 100
-    this.camera.far = size * 100
-
+    // set camera initial position
     this.camera.position.copy(center)
     this.camera.lookAt(center)
-    this.camera.position.x += size / 2.0
-    this.camera.position.y += size / 14
-    this.camera.position.z += size / 1.5
-
+    this.camera.position.x += size
+    this.camera.position.y += size
+    this.camera.position.z += size
     this.camera.updateProjectionMatrix()
+    
     // backup camera to restore it later
     this.backupCamera = this.camera.clone()
 
@@ -252,7 +258,7 @@ class Monster3DProfile extends Component {
       this.applyPropertyUpdate()
       this.changeStateAnimation()
     }
-
+    
     return (
       <div
         className={classes.profile3D}
@@ -274,6 +280,11 @@ Monster3DProfile.propTypes = {
     )
   ),
   path: PropTypes.string.isRequired,
+  position: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    z: PropTypes.number
+  }),
   rotation: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,

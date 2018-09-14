@@ -22,7 +22,7 @@ const Monster = () =>
         typeId={554845454654474}
         action={ActionType.IDLE}
         path={monster3D}
-        size={{ height: "500px" }}
+        size={{ width: "1000px", height: "1000px" }}
         background={{ color: "#322e3a", alpha: 1 }}
         zoom={false}
     />
@@ -34,7 +34,8 @@ const Monster = () =>
 | typeId          | `number` |                                      | Monster ID.                                    |
 | action          | `string` | `IDLE`                               | Monster state (animation name).                |
 | path            | `string` |                                      | Path to .gltf file (monster 3D model).         |
-| rotation        | `object` | `{ x: -0.1, y: 0.7, z: 0 }`          | Initial monster's rotation.                    |
+| position        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                    |
+| rotation        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation.                    |
 | autoRotate      | `bool`   | `false`                              | Enables autorotation.                          |
 | autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed. |
 | zoom            | `bool`   | `true`                               | Enables zoom.                                  |
