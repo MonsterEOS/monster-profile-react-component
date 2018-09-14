@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
-import OBJLoader from './utils/OBJLoader'
 import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
@@ -258,7 +257,7 @@ class Monster3DProfile extends Component {
       this.applyPropertyUpdate()
       this.changeStateAnimation()
     }
-    
+
     return (
       <div
         className={classes.profile3D}
