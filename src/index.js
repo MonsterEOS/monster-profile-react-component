@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { ActionType } from './utils/enums'
 import * as THREE from 'three'
 import GLTFLoader from './utils/GLTFLoader'
-import OBJLoader from './utils/OBJLoader'
 import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
@@ -96,10 +95,9 @@ class Monster3DProfile extends Component {
     this.monster = this.model.scene.children[0]
 
     const { rotation, action, position } = this.props
-    const defaultRotation = { x: 0, y: 0, z: 0 }
-    const monsterRotation = { ...defaultRotation, ...rotation }
-    const defaultPosition = { x: 0, y: 0, z: 0 }
-    const monsterPosition = { ...defaultPosition, ...position }
+    const defaultValues = { x: 0, y: 0, z: 0 }
+    const monsterRotation = { ...defaultValues, ...rotation }
+    const monsterPosition = { ...defaultValues, ...position }
 
     this.monster.updateMatrixWorld()
 
@@ -197,20 +195,24 @@ class Monster3DProfile extends Component {
     this.camera.position.z = this.backupCamera.position.z
     this.camera.rotation.set(this.backupCamera.rotation)
     this.camera.updateProjectionMatrix()
+
     // dark light
     this.light.color.setHex(0x0f0f0f)
     this.pointLight.color.setHex(0x000000)
+
     // disable controls
     this.controls.enabled = false
   }
 
   clearMonster = () => {
     const { lightIntensity } = this.props
+
     // white light
     this.light.color.setHex(0xffffff)
     this.light.intensity = this.ambientalLightIntensity
     this.pointLight.color.setHex(0xffffff)
     this.pointLight.intensity = lightIntensity
+
     // enable controls
     this.controls.enabled = true
   }
@@ -229,6 +231,7 @@ class Monster3DProfile extends Component {
 
   applyPropertyUpdate = () => {
     const { autoRotate, autoRotateSpeed, action } = this.props
+    
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
