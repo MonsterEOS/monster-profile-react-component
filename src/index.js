@@ -192,11 +192,7 @@ class Monster3DProfile extends Component {
 
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
-    this.monsterMixer.clipAction(
-      THREE.AnimationClip.findByName(
-        this.model.animations, action
-      )
-    ).play()
+    this.changeStateAnimation()
   }
 
   loadSleepingObject = () => {
