@@ -5,6 +5,10 @@ Execute:
 ```
 npm install --save https://github.com/VertexStudio/monster-profile-react-component
 ```
+or
+```
+yarn add https://github.com/VertexStudio/monster-profile-react-component
+```
 
 Then, install its peer dependencies:
 ```
