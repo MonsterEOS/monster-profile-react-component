@@ -321,15 +321,17 @@ class Monster3DProfile extends Component {
       ActionType.DEAD
     ]
 
-    this.monsterMixer.stopAllAction()
-    this.monsterMixer.clipAction(
-      THREE.AnimationClip.findByName(
-        this.model.animations,
-        triggerIdle.includes(action)
-          ? ActionType.IDLE
-          : action
-      )
-    ).play()
+    if (this.monsterMixer) {
+      this.monsterMixer.stopAllAction()
+      this.monsterMixer.clipAction(
+        THREE.AnimationClip.findByName(
+          this.model.animations,
+          triggerIdle.includes(action)
+            ? ActionType.IDLE
+            : action
+        )
+      ).play()
+    }
   }
 
   render() {
