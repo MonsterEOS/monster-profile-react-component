@@ -15,38 +15,43 @@ npm install --save react@16.x three@^0.96.0
 
 ```javascript
 import React from 'react'
+import monster3D from './assets/models/vampire.gltf'
 import { Monster3DProfile, ActionType } from 'react-monstereos-profile'
 
 const Monster = () =>
     <Monster3DProfile
-        typeId={554845454654474}
-        action={ActionType.IDLE}
+        typeId={5454543545454}
         path={monster3D}
-        size={{ width: "1000px", height: "1000px" }}
-        background={{ color: "#322e3a", alpha: 1 }}
+        action={ActionType.IDLE}
+        position={{ y: -50 }}
+        size={{ height: "600px" }}
+        background={{ alpha: 1 }}
         zoom={false}
     />
 ```
 
 ### Component properties
-| Name            | Type     | Default                              | Description                                    |
-| --------------- | -------- | ------------------------------------ | ---------------------------------------------- |
-| typeId          | `number` |                                      | Monster ID.                                    |
-| action          | `string` | `IDLE`                               | Monster state (animation name).                |
-| path            | `string` |                                      | Path to .gltf file (monster 3D model).         |
-| position        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                    |
-| rotation        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation.                    |
-| autoRotate      | `bool`   | `false`                              | Enables autorotation.                          |
-| autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed. |
-| zoom            | `bool`   | `true`                               | Enables zoom.                                  |
-| size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                             |
-| background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.               |
-| lightIntensity  | `number` | `1.7`                                | Point light intensity.                         |
+| Name            | Type     | Default                              | Description                                                                                        |
+| --------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| typeId          | `number` |                                      | Monster ID.                                                                                        |
+| path            | `string` |                                      | Path to .gltf file (monster 3D model).                                                             |
+| action          | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
+| position        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                                                                        |
+| rotation        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation. Values must be in radians.                                             |
+| cameraPosition  | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial cameras's position.                                                                        |
+| autoRotate      | `bool`   | `false`                              | Enables autorotation.                                                                              |
+| autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed.                                                     |
+| zoom            | `bool`   | `true`                               | Enables zoom.                                                                                      |
+| lightIntensity  | `number` | `1.7`                                | Point light intensity. It gives contour and shape to the monster.                                  |
+| darkeningColor  | `number` | `0x000000`                           | Hex value (color) used to darken the monster when SLEEPING or DEAD.                                |
+| size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                                                                                 |
+| background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.                                                                   |
 
 
 ## Run demo
 
-1. Clone the repository.
-2. `cd` into the directory of the repo.
-3. Execute `npm install`.
-4. Execute `npm start`.
+1. `git clone https://github.com/VertexStudio/monster-profile-react-component`.
+2. `cd monster-profile-react-component`.
+3. `npm install`.
+4. `npm start`.
+5. Demo running at `http://localhost:3000/`. 

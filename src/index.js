@@ -6,6 +6,7 @@ import GLTFLoader from './utils/GLTFLoader'
 import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
+import sleeping from '../models/ZZZ.gltf'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -14,10 +15,9 @@ class Monster3DProfile extends Component {
       this.mount = element
     }
     window.addEventListener(
-      "resize",
-      this.onWindowsResize,
-      false
+      "resize", this.onWindowsResize, false
     )
+    // used to calculate the delta between frames
     this.prevTime = 0
   }
 
@@ -28,6 +28,7 @@ class Monster3DProfile extends Component {
     const defaultBackground = { color: "#322e3a", alpha: 1 }
     const canvasBackground = { ...defaultBackground, ...background }
 
+    // DOM element (canvas) dimensions
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
 
@@ -38,7 +39,6 @@ class Monster3DProfile extends Component {
 
     // add camera
     this.camera = new THREE.PerspectiveCamera(70, width / height, 0.25, 1000)
-    this.camera.updateProjectionMatrix()
 
     // setting controls
     this.controls = new OrbitControls(this.camera, this.mount)
@@ -62,7 +62,6 @@ class Monster3DProfile extends Component {
 
     // add point white light
     const pointLightSphere = new THREE.SphereBufferGeometry(20, 16, 8)
-
     this.pointLight = new THREE.PointLight(0xffffff, lightIntensity, 1000)
     this.pointLight.add(new THREE.Mesh(
       pointLightSphere,
@@ -81,87 +80,13 @@ class Monster3DProfile extends Component {
       // TODO: add a loader.
       event => {
         const percentage = (event.loaded / event.total) * 100
-        console.log(`Loading 3D model... ${Math.round(percentage)}%`)
+        console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
       },
       console.error.bind(console)
     )
 
     // start scene
     this.start()
-  }
-
-  loadMonster = gltf => {
-    this.model = gltf
-    this.monster = this.model.scene.children[0]
-
-    const { rotation, action, position } = this.props
-    const defaultRotation = { x: 0, y: 0, z: 0 }
-    const monsterRotation = { ...defaultRotation, ...rotation }
-    const defaultPosition = { x: 0, y: 0, z: 0 }
-    const monsterPosition = { ...defaultPosition, ...position }
-
-    this.monster.updateMatrixWorld()
-
-    // center monster
-    const box = new THREE.Box3().setFromObject(this.monster)
-    const size = box.getSize(new THREE.Vector3()).length()
-    const center = box.getCenter(new THREE.Vector3())
-
-    // clipping planes
-    this.camera.near = size / 100
-    this.camera.far = size * 100
-
-    // set monster initial position
-    this.monster.position.x += (this.monster.position.x - center.x)
-    this.monster.position.y += (this.monster.position.y - center.y)
-    this.monster.position.z += (this.monster.position.z - center.z)
-
-    // set monster position relative to initial position
-    this.monster.position.x += monsterPosition.x
-    this.monster.position.y += monsterPosition.y
-    this.monster.position.z += monsterPosition.z
-
-    // set model initial rotation
-    this.monster.rotation.x = monsterRotation.x
-    this.monster.rotation.y = monsterRotation.y
-    this.monster.rotation.z = monsterRotation.z
-
-    this.controls.maxDistance = size * 1
-    this.controls.reset()
-
-    // set camera initial position
-    this.camera.position.copy(center)
-    this.camera.lookAt(center)
-    this.camera.position.x += size
-    this.camera.position.y += size
-    this.camera.position.z += size
-    this.camera.updateProjectionMatrix()
-    
-    // backup camera to restore it later
-    this.backupCamera = this.camera.clone()
-
-    // add scene
-    this.scene.add(this.monster)
-
-    // darken or clear the monster according to current 'action'
-    this.monsterColorState(action)
-
-    // start animation
-    this.mixer = new THREE.AnimationMixer(this.monster)
-    this.mixer.clipAction(
-      THREE.AnimationClip.findByName(
-        this.model.animations, action
-      )
-    ).play()
-  }
-
-  onWindowsResize = () => {
-    const width = this.mount.clientWidth
-    const height = this.mount.clientHeight
-
-    this.camera.aspect = width / height
-    this.camera.updateProjectionMatrix()
-    this.renderer.setSize(width, height)
   }
 
   componentWillUnmount() {
@@ -179,14 +104,141 @@ class Monster3DProfile extends Component {
     cancelAnimationFrame(this.frameId)
   }
 
+  renderScene = () => {
+    this.renderer.render(this.scene, this.camera)
+  }
+
   animate = (time) => {
     this.frameId = window.requestAnimationFrame(this.animate)
     const delta = (time - this.prevTime) / 1000
 
-    this.mixer && this.mixer.update(delta)
+    this.monsterMixer && this.monsterMixer.update(delta)
+    this.sleepingMixer && this.sleepingMixer.update(delta)
     this.controls.update()
     this.renderScene()
     this.prevTime = time
+  }
+
+  onWindowsResize = () => {
+    // DOM element (canvas) dimensions
+    const width = this.mount.clientWidth
+    const height = this.mount.clientHeight
+
+    this.camera.aspect = width / height
+    this.camera.updateProjectionMatrix()
+    this.renderer.setSize(width, height)
+  }
+
+  loadMonster = gltf => {
+    this.model = gltf
+    this.monster = this.model.scene
+
+    const { rotation, action, position, cameraPosition } = this.props
+    const defaultValues = { x: 0, y: 0, z: 0 }
+    const monsterRot = { ...defaultValues, ...rotation }
+    const monsterPos = { ...defaultValues, ...position }
+    const cameraPos = { ...defaultValues, ...cameraPosition }
+
+    // center monster
+    const box = new THREE.Box3().setFromObject(this.monster)
+    const size = box.getSize(new THREE.Vector3()).length()
+    const center = box.getCenter(new THREE.Vector3())
+
+    // clipping planes
+    this.camera.near = size / 100
+    this.camera.far = size * 100
+
+    // set monster initial position
+    this.monster.position.x += (this.monster.position.x - center.x)
+    this.monster.position.y += (this.monster.position.y - center.y)
+    this.monster.position.z += (this.monster.position.z - center.z)
+
+    // set monster position relative to initial position
+    this.monster.position.x += monsterPos.x
+    this.monster.position.y += monsterPos.y
+    this.monster.position.z += monsterPos.z
+
+    // set model initial rotation
+    this.monster.rotation.x += monsterRot.x
+    this.monster.rotation.y += monsterRot.y
+    this.monster.rotation.z += monsterRot.z
+
+    // updates global transform of the monster
+    this.monster.updateMatrixWorld()
+
+    // how far you can dolly out
+    this.controls.maxDistance = size * 10
+
+    // set camera initial position
+    this.camera.lookAt(center)
+    this.camera.position.z += size
+
+    // set camera position relative to initial position
+    this.camera.position.x += cameraPos.x
+    this.camera.position.y += cameraPos.y
+    this.camera.position.z += cameraPos.z
+
+    // update camera parameters
+    this.camera.updateProjectionMatrix()
+
+    // backup camera to restore it later
+    this.backupCamera = this.camera.clone()
+
+    // add scene
+    this.scene.add(this.monster)
+
+    // darken or light the monster according to current 'action'
+    this.monsterLightColor(action)
+
+    // start animation
+    this.monsterMixer = new THREE.AnimationMixer(this.monster)
+    this.changeStateAnimation()
+  }
+
+  loadSleepingObject = () => {
+    // loading Z's model with GLTF loader
+    const gltfLoader = new GLTFLoader()
+    gltfLoader.load(
+      sleeping,
+      gltf => {
+        this.zModel = gltf
+        this.sleepingObject = this.zModel.scene
+        this.camera.add(this.sleepingObject)
+
+        // update camera parameters
+        this.camera.updateProjectionMatrix()
+
+        // centering the sleeping z's
+        this.sleepingObject.position.x -= 0.4
+        this.sleepingObject.position.y -= 1.2
+        this.sleepingObject.position.z -= 4
+
+        // basic material to avoid light effect
+        this.sleepingObject.traverse(child => {
+          const basicMaterial = new THREE.MeshBasicMaterial()
+          basicMaterial.skinning = true
+          if (child.isMesh) {
+            child.material = basicMaterial
+          }
+        })
+
+        // playing its only animation
+        this.sleepingMixer = new THREE.AnimationMixer(this.sleepingObject)
+        if (this.props.action === ActionType.SLEEPING) {
+          this.sleepingMixer.clipAction(
+            this.zModel.animations[0]
+          ).play()
+        } else {
+          this.camera.remove(this.sleepingObject)
+        }
+      },
+      // TODO: add a loader.
+      event => {
+        const percentage = (event.loaded / event.total) * 100
+        console.log(`Loading 3D sleeping model... ${Math.round(percentage)}%`)
+      },
+      console.error.bind(console)
+    )
   }
 
   darkenMonster = () => {
@@ -196,58 +248,88 @@ class Monster3DProfile extends Component {
     this.camera.position.z = this.backupCamera.position.z
     this.camera.rotation.set(this.backupCamera.rotation)
     this.camera.updateProjectionMatrix()
+
     // dark light
-    this.light.color.setHex(0x0f0f0f)
+    this.light.color.setHex(this.props.darkeningColor)
     this.pointLight.color.setHex(0x000000)
+
     // disable controls
     this.controls.enabled = false
   }
 
-  clearMonster = () => {
+  lightMonster = () => {
     const { lightIntensity } = this.props
+
     // white light
     this.light.color.setHex(0xffffff)
     this.light.intensity = this.ambientalLightIntensity
     this.pointLight.color.setHex(0xffffff)
     this.pointLight.intensity = lightIntensity
+
     // enable controls
     this.controls.enabled = true
   }
 
-  monsterColorState = (action) => {
+  // darkens or lights the monster, and adds
+  // or not, the sleeping z's model.
+  monsterLightColor = (action) => {
     if (
       action === ActionType.SLEEPING ||
       action === ActionType.DEAD
     ) {
       this.darkenMonster()
+      if (!this.sleepingObject) {
+        this.loadSleepingObject()
+      }
+      else if (action !== ActionType.DEAD) {
+        this.camera.add(this.sleepingObject)
+        this.sleepingMixer.clipAction(
+          this.zModel.animations[0]
+        ).play()
+      } else {
+        this.sleepingMixer &&
+          this.sleepingMixer.stopAllAction()
+        this.camera.remove(this.sleepingObject)
+      }
     } else {
-      this.clearMonster()
+      this.lightMonster()
+      this.sleepingMixer &&
+        this.sleepingMixer.stopAllAction()
+      this.camera.remove(this.sleepingObject)
     }
-    this.onWindowsResize
   }
 
   applyPropertyUpdate = () => {
     const { autoRotate, autoRotateSpeed, action } = this.props
+
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
 
-    // action (state animation)
-    this.monsterColorState(action)
+    // darken or light the monster according to current 'action'
+    this.monsterLightColor(action)
   }
 
+  // plays the requested animation by the 'action' prop
   changeStateAnimation = () => {
-    this.mixer.stopAllAction()
-    this.mixer.clipAction(
+    const { action } = this.props
+    // any of them trigger 'Idle' action, as those do 
+    // not have their own single animation
+    const triggerIdle = [
+      ActionType.SLEEPING,
+      ActionType.FEEDING,
+      ActionType.DEAD
+    ]
+
+    this.monsterMixer.stopAllAction()
+    this.monsterMixer.clipAction(
       THREE.AnimationClip.findByName(
         this.model.animations,
-        this.props.action
+        triggerIdle.includes(action)
+          ? ActionType.IDLE
+          : action
       )
     ).play()
-  }
-
-  renderScene = () => {
-    this.renderer.render(this.scene, this.camera)
   }
 
   render() {
@@ -273,11 +355,19 @@ class Monster3DProfile extends Component {
 
 Monster3DProfile.propTypes = {
   typeId: PropTypes.number.isRequired,
-  action: PropTypes.oneOf(
-    Object.keys(ActionType).map(
+  action: function (props, propName, componentName) {
+    const validActions = Object.keys(ActionType).map(
       key => ActionType[key]
     )
-  ),
+    if (!validActions.includes(props[propName])) {
+      return new Error(
+        `Invalid ${propName} supplied to ${componentName}. ` +
+        `Use the ActionType enum to supply a valid value. ` +
+        `Valid values are: Idle, Attack, HitReact, Sleeping, ` +
+        `Feeding and Dead.`
+      )
+    }
+  },
   path: PropTypes.string.isRequired,
   position: PropTypes.shape({
     x: PropTypes.number,
@@ -289,6 +379,15 @@ Monster3DProfile.propTypes = {
     y: PropTypes.number,
     z: PropTypes.number
   }),
+  autoRotate: PropTypes.bool,
+  autoRotateSpeed: PropTypes.number,
+  cameraPosition: PropTypes.shape({
+    x: PropTypes.number,
+    y: PropTypes.number,
+    z: PropTypes.number
+  }),
+  zoom: PropTypes.bool,
+  lightIntensity: PropTypes.number,
   size: PropTypes.shape({
     width: PropTypes.string,
     height: PropTypes.string
@@ -296,11 +395,7 @@ Monster3DProfile.propTypes = {
   background: PropTypes.shape({
     color: PropTypes.string,
     alpha: PropTypes.number
-  }),
-  autoRotate: PropTypes.bool,
-  autoRotateSpeed: PropTypes.number,
-  zoom: PropTypes.bool,
-  lightIntensity: PropTypes.number
+  })
 }
 
 Monster3DProfile.defaultProps = {
@@ -312,7 +407,8 @@ Monster3DProfile.defaultProps = {
   autoRotate: false,
   autoRotateSpeed: -10,
   zoom: true,
-  lightIntensity: 1.7
+  lightIntensity: 1.7,
+  darkeningColor: 0x000000
 }
 
 Monster3DProfile = injectSheet(styles)(Monster3DProfile)

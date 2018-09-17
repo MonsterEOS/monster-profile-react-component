@@ -16,20 +16,23 @@ class App extends Component {
   }
 
   render() {
+    const { currentAnimation } = this.state
+
     return (
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId={5454543545454}
-          action={this.state.currentAnimation}
           path={monster3D}
-          position={{ y: -60 }}
+          action={currentAnimation}
+          rotation={{ y: Math.PI }}
+          position={{ y: -50 }}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
-          zoom={false}
+          zoom={true}
         />
         <select
-          value={this.state.currentAnimation}
+          value={currentAnimation}
           onChange={this.handleChange}
         >
           {Object.keys(ActionType).map(
@@ -42,8 +45,8 @@ class App extends Component {
             )
           )}
         </select>
-        <p><b>NOTE:</b> SLEEPING, FEEDING and DEAD are defaulting to <mark>IDLE</mark> for now.</p>
-        <p>IDLE action is triggering the dark monster (it's supposed to happen for SLEEPING and DEAD).</p>
+        <p><b>NOTE:</b> FEEDING doesn't have yet the <b>Chomp Chomp</b> animation.</p>
+        <p>And DEAD is only a black monster. Maybe it should have a "DEAD word" animation. </p>
       </Fragment>
     )
   }
