@@ -94,6 +94,10 @@ class Monster3DProfile extends Component {
     this.mount.removeChild(this.renderer.domElement)
   }
 
+  shouldComponentUpdate(nextProps) {
+    return !(nextProps.action === this.props.action)
+  } 
+
   start = () => {
     if (!this.frameId) {
       this.frameId = requestAnimationFrame(this.animate)
