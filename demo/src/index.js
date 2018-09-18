@@ -1,13 +1,14 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import monster3D from './assets/models/Tucan.gltf'
+import monster3D from './assets/models/Devil.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentAnimation: ActionType.IDLE
+      currentAnimation: ActionType.IDLE,
+      word: "yep yep"
     }
   }
 
@@ -15,8 +16,12 @@ class App extends Component {
     this.setState({ currentAnimation: event.target.value })
   }
 
+  onChange = (event) => {
+    this.setState({word: event.target.value})
+  }
+
   render() {
-    const { currentAnimation } = this.state
+    const { currentAnimation, word } = this.state
 
     return (
       <Fragment>
@@ -25,12 +30,11 @@ class App extends Component {
           typeId={5454543545454}
           path={monster3D}
           action={currentAnimation}
-          rotation={{ y: Math.PI }}
-          position={{ y: -50 }}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
           zoom={true}
         />
+        <input value={word} onChange={this.onChange} />
         <select
           value={currentAnimation}
           onChange={this.handleChange}
