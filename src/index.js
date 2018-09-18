@@ -22,7 +22,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, zoom, lightIntensity } = this.props
+    const { background, path, exposure, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -31,8 +31,6 @@ class Monster3DProfile extends Component {
     // DOM element (canvas) dimensions
     const width = this.mount.clientWidth
     const height = this.mount.clientHeight
-
-    this.ambientalLightIntensity = 0.15
 
     // add scene
     this.scene = new THREE.Scene()
@@ -53,16 +51,17 @@ class Monster3DProfile extends Component {
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
     this.renderer.gammaOutput = true
+    this.renderer.toneMappingExposure = exposure
     this.mount.appendChild(this.renderer.domElement)
 
-    // add ambiental white light
-    this.light = new THREE.AmbientLight(0xffffff, this.ambientalLightIntensity)
+    // add ambiental light
+    this.light = new THREE.AmbientLight(ambientColor, ambientIntensity)
     this.light.position.set(0, 1, 0)
     this.scene.add(this.light)
 
-    // add point white light
+    // add point light
     const pointLightSphere = new THREE.SphereBufferGeometry(20, 16, 8)
-    this.pointLight = new THREE.PointLight(0xffffff, lightIntensity, 1000)
+    this.pointLight = new THREE.PointLight(directColor, directIntensity, 1000)
     this.pointLight.add(new THREE.Mesh(
       pointLightSphere,
       new THREE.MeshBasicMaterial({ color: 0xffffff })
@@ -253,8 +252,8 @@ class Monster3DProfile extends Component {
     this.camera.rotation.set(this.backupCamera.rotation)
     this.camera.updateProjectionMatrix()
 
-    // dark light
-    this.light.color.setHex(this.props.darkeningColor)
+    // all lights to black
+    this.light.color.setHex(0x000000)
     this.pointLight.color.setHex(0x000000)
 
     // disable controls
@@ -262,13 +261,13 @@ class Monster3DProfile extends Component {
   }
 
   lightMonster = () => {
-    const { lightIntensity } = this.props
+    const { ambientIntensity, ambientColor, directIntensity, directColor } = this.props
 
-    // white light
-    this.light.color.setHex(0xffffff)
-    this.light.intensity = this.ambientalLightIntensity
-    this.pointLight.color.setHex(0xffffff)
-    this.pointLight.intensity = lightIntensity
+    // all lights to custom params
+    this.light.color.setHex(ambientColor)
+    this.light.intensity = ambientIntensity
+    this.pointLight.color.setHex(directColor)
+    this.pointLight.intensity = directIntensity
 
     // enable controls
     this.controls.enabled = true
@@ -393,7 +392,11 @@ Monster3DProfile.propTypes = {
     z: PropTypes.number
   }),
   zoom: PropTypes.bool,
-  lightIntensity: PropTypes.number,
+  ambientIntensity: PropTypes.number,
+  ambientColor: PropTypes.number,
+  directIntensity: PropTypes.number,
+  directColor: PropTypes.number,
+  exposure: PropTypes.number,
   size: PropTypes.shape({
     width: PropTypes.string,
     height: PropTypes.string
@@ -413,7 +416,11 @@ Monster3DProfile.defaultProps = {
   autoRotate: false,
   autoRotateSpeed: -10,
   zoom: true,
-  lightIntensity: 1.7,
+  ambientIntensity: 0.15,
+  ambientColor: 0xffffff,
+  directIntensity: 1.7,
+  directColor: 0xffffff,
+  exposure: 1,
   darkeningColor: 0x000000
 }
 
