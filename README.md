@@ -35,21 +35,24 @@ const Monster = () =>
 ```
 
 ### Component properties
-| Name            | Type     | Default                              | Description                                                                                        |
-| --------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| typeId          | `number` |                                      | Monster ID.                                                                                        |
-| path            | `string` |                                      | Path to .gltf file (monster 3D model).                                                             |
-| action          | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
-| position        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                                                                        |
-| rotation        | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation. Values must be in radians.                                             |
-| cameraPosition  | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial cameras's position.                                                                        |
-| autoRotate      | `bool`   | `false`                              | Enables autorotation.                                                                              |
-| autoRotateSpeed | `number` | `-10`                                | If autorotation is enabled, defines its speed.                                                     |
-| zoom            | `bool`   | `true`                               | Enables zoom.                                                                                      |
-| lightIntensity  | `number` | `1.7`                                | Point light intensity. It gives contour and shape to the monster.                                  |
-| darkeningColor  | `number` | `0x000000`                           | Hex value (color) used to darken the monster when SLEEPING or DEAD.                                |
-| size            | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                                                                                 |
-| background      | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.                                                                   |
+| Name             | Type     | Default                              | Description                                                                                        |
+| ---------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
+| typeId           | `number` |                                      | Monster ID.                                                                                        |
+| path             | `string` |                                      | Path to .gltf file (monster 3D model).                                                             |
+| action           | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
+| position         | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                                                                        |
+| rotation         | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation. Values must be in radians.                                             |
+| cameraPosition   | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial cameras's position.                                                                        |
+| autoRotate       | `bool`   | `false`                              | Enables autorotation.                                                                              |
+| autoRotateSpeed  | `number` | `-10`                                | If autorotation is enabled, defines its speed.                                                     |
+| exposure         | `number` | `1`                                  | Exposure level of tone mapping.                                                                    |
+| ambientIntensity | `number` | `0.15`                               | Ambient light intensity.                                                                           |
+| ambientColor     | `number` | `0xffffff`                           | Ambient light color. It's a hex color number.                                                      |
+| directIntensity  | `number` | `1.7`                                | Point light intensity. It gives contour and shape to the monster.                                  |
+| directColor      | `number` | `0xffffff`                           | Point light color. It's a hex color number.                                                        |
+| zoom             | `bool`   | `true`                               | Enables zoom.                                                                                      |
+| size             | `object` | `{ width: "auto", height: "600px" }` | Canvas dimensions.                                                                                 |
+| background       | `object` | `{ color: "#00000", alpha: 1 }`      | Canvas background configuration.                                                                   |
 
 
 ## Run demo

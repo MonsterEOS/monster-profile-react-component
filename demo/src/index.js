@@ -7,17 +7,12 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentAnimation: ActionType.IDLE,
-      word: "yep yep"
+      currentAnimation: ActionType.IDLE
     }
   }
 
   handleChange = (event) => {
     this.setState({ currentAnimation: event.target.value })
-  }
-
-  onChange = (event) => {
-    this.setState({word: event.target.value})
   }
 
   render() {
@@ -32,9 +27,12 @@ class App extends Component {
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
+          exposure={2}
+          ambientColor={0x000000}
+          directIntensity={2}
+          directColor={0x4c0000}
           zoom={true}
         />
-        <input value={word} onChange={this.onChange} />
         <select
           value={currentAnimation}
           onChange={this.handleChange}
