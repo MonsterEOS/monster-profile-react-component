@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import monster3D from './assets/models/monster-5.gltf'
+import monster3D from './assets/models/Devil.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 
 class App extends Component {
