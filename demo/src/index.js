@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import monster3D from './assets/models/Devil.gltf'
+import monster3D from './assets/models/monster-5.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
   }
 
   render() {
-    const { currentAnimation, word } = this.state
+    const { currentAnimation } = this.state
 
     return (
       <Fragment>
