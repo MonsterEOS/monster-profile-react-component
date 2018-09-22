@@ -91,11 +91,10 @@ class Monster3DProfile extends Component {
   componentWillUnmount() {
     this.stop()
     this.mount.removeChild(this.renderer.domElement)
+    window.removeEventListener(
+      "resize", this.onWindowsResize, false
+    )
   }
-
-  shouldComponentUpdate(nextProps) {
-    return !(nextProps.action === this.props.action)
-  } 
 
   start = () => {
     if (!this.frameId) {
