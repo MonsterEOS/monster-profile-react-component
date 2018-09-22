@@ -148,8 +148,8 @@ class Monster3DProfile extends Component {
     const center = box.getCenter(new THREE.Vector3())
 
     // clipping planes
-    this.camera.near = size / 100
-    this.camera.far = size * 100
+    this.camera.near = size / 1000
+    this.camera.far = size * 1000
 
     // set monster initial position
     this.monster.position.x += (this.monster.position.x - center.x)
