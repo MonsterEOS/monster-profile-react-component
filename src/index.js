@@ -247,11 +247,13 @@ class Monster3DProfile extends Component {
 
   darkenMonster = () => {
     // resetting camera
-    this.camera.position.x = this.backupCamera.position.x
-    this.camera.position.y = this.backupCamera.position.y
-    this.camera.position.z = this.backupCamera.position.z
-    this.camera.rotation.set(this.backupCamera.rotation)
-    this.camera.updateProjectionMatrix()
+    if (this.backupCamera) {
+      this.camera.position.x = this.backupCamera.position.x
+      this.camera.position.y = this.backupCamera.position.y
+      this.camera.position.z = this.backupCamera.position.z
+      this.camera.rotation.set(this.backupCamera.rotation)
+      this.camera.updateProjectionMatrix()
+    }
 
     // all lights to black
     this.light.color.setHex(0x000000)
