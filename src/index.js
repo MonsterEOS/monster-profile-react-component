@@ -123,12 +123,14 @@ class Monster3DProfile extends Component {
 
   onWindowsResize = () => {
     // DOM element (canvas) dimensions
-    const width = this.mount.clientWidth
-    const height = this.mount.clientHeight
+    if (this.mount) {
+      const width = this.mount.clientWidth
+      const height = this.mount.clientHeight
 
-    this.camera.aspect = width / height
-    this.camera.updateProjectionMatrix()
-    this.renderer.setSize(width, height)
+      this.camera.aspect = width / height
+      this.camera.updateProjectionMatrix()
+      this.renderer.setSize(width, height)
+    }
   }
 
   loadMonster = gltf => {
