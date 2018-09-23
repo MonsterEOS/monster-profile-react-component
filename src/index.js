@@ -7,7 +7,9 @@ import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
-import VertexStudioMaterial from './utils/VertexStudioMaterial'
+import VertexStudioMaterial from './utils/VextexStudioMaterial'
+
+console.log(VertexStudioMaterial)
 
 class Monster3DProfile extends Component {
   constructor(props) {
