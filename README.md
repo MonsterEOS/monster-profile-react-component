@@ -24,7 +24,7 @@ import { Monster3DProfile, ActionType } from 'react-monstereos-profile'
 
 const Monster = () =>
     <Monster3DProfile
-        typeId={5454543545454}
+        typeId="devil"
         path={monster3D}
         action={ActionType.IDLE}
         position={{ y: -50 }}
@@ -37,7 +37,7 @@ const Monster = () =>
 ### Component properties
 | Name             | Type     | Default                              | Description                                                                                        |
 | ---------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| typeId           | `number` |                                      | Monster ID.                                                                                        |
+| typeId           | `string` |                                      | Monster ID.                                                                                        |
 | path             | `string` |                                      | Path to .gltf file (monster 3D model).                                                             |
 | action           | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
 | position         | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                                                                        |

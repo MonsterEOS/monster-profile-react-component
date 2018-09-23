@@ -358,7 +358,7 @@ class Monster3DProfile extends Component {
 }
 
 Monster3DProfile.propTypes = {
-  typeId: PropTypes.number.isRequired,
+  typeId: PropTypes.string.isRequired,
   action: function (props, propName, componentName) {
     const validActions = Object.keys(ActionType).map(
       key => ActionType[key]
