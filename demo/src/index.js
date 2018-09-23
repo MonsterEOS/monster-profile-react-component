@@ -22,7 +22,7 @@ class App extends Component {
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
-          typeId={5454543545454}
+          typeId="devil"
           path={monster3D}
           action={currentAnimation}
           size={{ height: "600px" }}
