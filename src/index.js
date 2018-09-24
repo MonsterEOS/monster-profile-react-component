@@ -7,6 +7,7 @@ import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
+import { debounce } from './utils'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -121,7 +122,7 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
-  onWindowsResize = () => {
+  onWindowsResize = debounce(200)(() => {
     // DOM element (canvas) dimensions
     if (this.mount) {
       const width = this.mount.clientWidth
@@ -131,7 +132,7 @@ class Monster3DProfile extends Component {
       this.camera.updateProjectionMatrix()
       this.renderer.setSize(width, height)
     }
-  }
+  })
 
   loadMonster = gltf => {
     this.model = gltf
