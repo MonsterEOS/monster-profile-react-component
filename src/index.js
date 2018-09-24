@@ -7,6 +7,8 @@ import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
+import { debounce } from './utils'
+import VertexStudioMaterial from './utils/VextexStudioMaterial'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -50,8 +52,6 @@ class Monster3DProfile extends Component {
     this.renderer.setClearColor(canvasBackground.color, canvasBackground.alpha)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
-    this.renderer.gammaOutput = true
-    this.renderer.toneMappingExposure = exposure
     this.mount.appendChild(this.renderer.domElement)
 
     // add ambiental light
@@ -71,18 +71,23 @@ class Monster3DProfile extends Component {
     this.camera.add(this.pointLight)
     this.scene.add(this.camera)
 
-    // loading monster with GLTF loader
-    const gltfLoader = new GLTFLoader()
-    gltfLoader.load(
-      path,
-      this.loadMonster,
-      // TODO: add a loader.
-      event => {
-        const percentage = (event.loaded / event.total) * 100
-        console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
-      },
-      console.error.bind(console)
-    )
+    VertexStudioMaterial()
+    .then(VertexStudioMaterial => {
+      this.monsterMaterial = VertexStudioMaterial
+
+      // loading monster with GLTF loader
+      const gltfLoader = new GLTFLoader()
+      gltfLoader.load(
+        path,
+        this.loadMonster,
+        // TODO: add a loader.
+        event => {
+          const percentage = (event.loaded / event.total) * 100
+          console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
+        },
+        console.error.bind(console)
+      )
+    })
 
     // start scene
     this.start()
@@ -121,7 +126,7 @@ class Monster3DProfile extends Component {
     this.prevTime = time
   }
 
-  onWindowsResize = () => {
+  onWindowsResize = debounce(200)(() => {
     // DOM element (canvas) dimensions
     if (this.mount) {
       const width = this.mount.clientWidth
@@ -131,7 +136,7 @@ class Monster3DProfile extends Component {
       this.camera.updateProjectionMatrix()
       this.renderer.setSize(width, height)
     }
-  }
+  })
 
   loadMonster = gltf => {
     this.model = gltf
@@ -170,6 +175,19 @@ class Monster3DProfile extends Component {
     // updates global transform of the monster
     this.monster.updateMatrixWorld()
 
+    this.monster.traverse(child => {
+      if (child.isMesh) {
+        if (child.material[0]) {
+          child.material.forEach((material, idx) => {
+            child.material[idx] = this.monsterMaterial(material.map)
+          })
+        }
+        else {
+          child.material = this.monsterMaterial(child.material.map)
+        }
+      }
+    })
+
     // how far you can dolly out
     this.controls.maxDistance = size * 10
 
@@ -192,7 +210,7 @@ class Monster3DProfile extends Component {
     this.scene.add(this.monster)
 
     // darken or light the monster according to current 'action'
-    this.monsterLightColor(action)
+    // this.monsterLightColor(action)
 
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
