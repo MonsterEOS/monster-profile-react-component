@@ -28,9 +28,9 @@ class App extends Component {
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
           exposure={2}
-          ambientColor={0x000000}
-          directIntensity={2}
-          directColor={0x4c0000}
+          ambientColor={0xffffff}
+          directIntensity={3}
+          directColor={0xffffff}
           zoom={true}
         />
         <select
