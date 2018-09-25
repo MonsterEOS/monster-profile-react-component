@@ -24,7 +24,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, exposure, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
+    const { background, path, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -213,12 +213,9 @@ class Monster3DProfile extends Component {
     // add scene
     this.scene.add(this.monster)
 
-    // darken or light the monster according to current 'action'
-     this.monsterLightColor(action)
-
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
-    this.changeStateAnimation()
+    this.loadSleepingObject()
   }
 
   loadSleepingObject = () => {
@@ -231,6 +228,7 @@ class Monster3DProfile extends Component {
         this.sleepingObject = this.zModel.scene
         this.camera.add(this.sleepingObject)
 
+        const { action } = this.props
         // update camera parameters
         this.camera.updateProjectionMatrix()
 
@@ -250,13 +248,16 @@ class Monster3DProfile extends Component {
 
         // playing its only animation
         this.sleepingMixer = new THREE.AnimationMixer(this.sleepingObject)
-        if (this.props.action === ActionType.SLEEPING) {
+        if (action === ActionType.SLEEPING) {
           this.sleepingMixer.clipAction(
             this.zModel.animations[0]
           ).play()
         } else {
           this.camera.remove(this.sleepingObject)
         }
+        // darken or light the monster according to current 'action'
+        this.monsterLightColor(action)
+        this.changeStateAnimation()
       },
       // TODO: add a loader.
       event => {
@@ -306,10 +307,7 @@ class Monster3DProfile extends Component {
       action === ActionType.DEAD
     ) {
       this.darkenMonster()
-      if (!this.sleepingObject) {
-        this.loadSleepingObject()
-      }
-      else if (action !== ActionType.DEAD) {
+      if (action !== ActionType.DEAD) {
         this.camera.add(this.sleepingObject)
         this.sleepingMixer.clipAction(
           this.zModel.animations[0]
@@ -351,7 +349,7 @@ class Monster3DProfile extends Component {
     if (this.monsterMixer) {
       this.monsterMixer.stopAllAction()
       if (action === ActionType.DEAD) {
-        const idle = this.monsterMixer.clipAction(
+        this.monsterMixer.clipAction(
           THREE.AnimationClip.findByName(
             this.model.animations,
             ActionType.IDLE
@@ -432,7 +430,6 @@ Monster3DProfile.propTypes = {
   ambientColor: PropTypes.number,
   directIntensity: PropTypes.number,
   directColor: PropTypes.number,
-  exposure: PropTypes.number,
   size: PropTypes.shape({
     width: PropTypes.string,
     height: PropTypes.string
@@ -456,7 +453,6 @@ Monster3DProfile.defaultProps = {
   ambientColor: 0xffffff,
   directIntensity: 1.7,
   directColor: 0xffffff,
-  exposure: 1,
   darkeningColor: 0x000000
 }
 
