@@ -48,7 +48,11 @@ class Monster3DProfile extends Component {
     this.controls.update()
 
     // add renderer
-    this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    if (window.renderer) {
+      this.renderer = window.renderer
+    } else {
+      this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true })
+    }
     this.renderer.setClearColor(canvasBackground.color, canvasBackground.alpha)
     this.renderer.setPixelRatio(window.devicePixelRatio)
     this.renderer.setSize(width, height)
@@ -214,7 +218,7 @@ class Monster3DProfile extends Component {
     this.scene.add(this.monster)
 
     // darken or light the monster according to current 'action'
-     this.monsterLightColor(action)
+    this.monsterLightColor(action)
 
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
@@ -351,7 +355,7 @@ class Monster3DProfile extends Component {
     if (this.monsterMixer) {
       this.monsterMixer.stopAllAction()
       if (action === ActionType.DEAD) {
-        const idle = this.monsterMixer.clipAction(
+        this.monsterMixer.clipAction(
           THREE.AnimationClip.findByName(
             this.model.animations,
             ActionType.IDLE
