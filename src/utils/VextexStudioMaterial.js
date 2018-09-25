@@ -1,6 +1,6 @@
 import * as THREE from 'three'
-import vertexstudio_vert from './vertexstudio_vert.glsl'
-import vertexstudio_frag from './vertexstudio_frag.glsl'
+import vertexstudio_vert from '../../shaders/vertexstudio_vert.glsl'
+import vertexstudio_frag from '../../shaders/vertexstudio_frag.glsl'
 
 
 const request = async (resource) => {
