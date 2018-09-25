@@ -13,19 +13,21 @@ const VertexStudioMaterial = async () => {
 	let vert = await request(vertexstudio_vert)
 	let frag = await request(vertexstudio_frag)
 
-	return (function (map) {
+	return (function (map, decor) {
 		return new THREE.ShaderMaterial({
 			uniforms: {
-				diffuse: { value: new THREE.Color(0xff8080) },
-				emissive: { value: new THREE.Color(0x000000) },
+				diffuse: { value: new THREE.Color(decor.shader.diffuse) },
+				emissive: { value: new THREE.Color(decor.shader.emissive) },
 				opacity: { value: 1.0 },
+				hue: { value: decor.shader.hue },
+				saturation: { value: decor.shader.saturation },
 				map: { value: map },
 				uvTransform: { value: new THREE.Matrix3() },
 				time: { value: 1.0 },
 				resolution: { value: new THREE.Vector2() },
-				rimPower: { value: 0.4},
-				rimIntensity: { value: 1.5},
-				rimColor: { value: new THREE.Color(0xff8000) },
+				rimPower: { value: decor.shader.rimPower},
+				rimIntensity: { value: decor.shader.rimIntensity},
+				rimColor: { value: new THREE.Color(decor.shader.rimColor) },
 				ambientLightColor: { value: [] },
 				directionalLights: {
 					value: [], properties: {

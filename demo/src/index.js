@@ -3,6 +3,53 @@ import { render } from 'react-dom'
 import monster3D from './assets/models/Devil.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 
+const monsterDecors = {
+  neutral: {
+    shader: {
+      diffuse: 0x808080,
+      emissive: 0x000000,
+      hue: 0.0,
+      saturation: 1.0,
+      rimPower: 0.4,
+      rimIntensity: 0.4,
+      rimColor: 0x00aedb,
+    }
+  },
+  fire: {
+    shader: {
+      diffuse: 0xff5555,
+      emissive: 0x211111,
+      hue: 0.0,
+      saturation: 1.2,
+      rimPower: 0.5,
+      rimIntensity: 3.0,
+      rimColor: 0xff3311,
+    }
+  },
+  ice: {
+    shader: {
+      diffuse: 0x8888ee,
+      emissive: 0x000000,
+      hue: 0.0,
+      saturation: 0.5,
+      rimPower: 0.4,
+      rimIntensity: 2.0,
+      rimColor: 0x00aeeb,
+    }
+  },
+  metal: {
+    shader: {
+      diffuse: 0x555577,
+      emissive: 0x222222,
+      hue: 0.0,
+      saturation: 0.3,
+      rimPower: 0.3,
+      rimIntensity: 1.0,
+      rimColor: 0xffffff,
+    }
+  }
+}
+
 class App extends Component {
   constructor(props) {
     super(props)
@@ -32,6 +79,7 @@ class App extends Component {
           directIntensity={3}
           directColor={0xffffff}
           zoom={true}
+          decor={monsterDecors.neutral}
         />
         <select
           value={currentAnimation}
