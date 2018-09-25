@@ -214,7 +214,7 @@ class Monster3DProfile extends Component {
     this.scene.add(this.monster)
 
     // darken or light the monster according to current 'action'
-    // this.monsterLightColor(action)
+     this.monsterLightColor(action)
 
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
