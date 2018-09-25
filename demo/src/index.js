@@ -47,7 +47,19 @@ const monsterDecors = {
       rimIntensity: 1.0,
       rimColor: 0xffffff,
     }
-  }
+  },
+  poison: {
+    shader: {
+      diffuse: 0xA69752,
+      emissive: 0x000000,
+      hue: 0.0,
+      saturation: 1.0,
+      rimPower: 0.8,
+      rimIntensity: 0.0,
+      rimColor: 0xB9FF2C,
+    }
+  },
+
 }
 
 class App extends Component {
@@ -79,7 +91,7 @@ class App extends Component {
           directIntensity={3}
           directColor={0xffffff}
           zoom={true}
-          decor={monsterDecors.neutral}
+          decor={monsterDecors.poison}
         />
         <select
           value={currentAnimation}
