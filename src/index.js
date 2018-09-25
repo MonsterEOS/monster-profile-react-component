@@ -308,10 +308,12 @@ class Monster3DProfile extends Component {
     ) {
       this.darkenMonster()
       if (action !== ActionType.DEAD) {
-        this.camera.add(this.sleepingObject)
-        this.sleepingMixer.clipAction(
-          this.zModel.animations[0]
-        ).play()
+        if (this.sleepingObject) {
+          this.camera.add(this.sleepingObject)
+          this.sleepingMixer.clipAction(
+            this.zModel.animations[0]
+          ).play()
+        }
       } else {
         this.sleepingMixer &&
           this.sleepingMixer.stopAllAction()
