@@ -179,11 +179,15 @@ class Monster3DProfile extends Component {
       if (child.isMesh) {
         if (child.material[0]) {
           child.material.forEach((material, idx) => {
-            child.material[idx] = this.monsterMaterial(material.map, this.props.decor)
+            if (material.map) {
+              child.material[idx] = this.monsterMaterial(material.map, this.props.decor)
+            }
           })
         }
         else {
-          child.material = this.monsterMaterial(child.material.map, this.props.decor)
+          if (child.material.map) {
+            child.material = this.monsterMaterial(child.material.map, this.props.decor)
+          }
         }
       }
     })

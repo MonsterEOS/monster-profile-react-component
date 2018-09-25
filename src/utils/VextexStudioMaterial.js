@@ -14,6 +14,9 @@ const VertexStudioMaterial = async () => {
 	let frag = await request(vertexstudio_frag)
 
 	return (function (map, decor) {
+
+		console.log("MAP", map)
+
 		return new THREE.ShaderMaterial({
 			uniforms: {
 				diffuse: { value: new THREE.Color(decor.shader.diffuse) },
