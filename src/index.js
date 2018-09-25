@@ -72,22 +72,22 @@ class Monster3DProfile extends Component {
     this.scene.add(this.camera)
 
     VertexStudioMaterial()
-    .then(VertexStudioMaterial => {
-      this.monsterMaterial = VertexStudioMaterial
+      .then(VertexStudioMaterial => {
+        this.monsterMaterial = VertexStudioMaterial
 
-      // loading monster with GLTF loader
-      const gltfLoader = new GLTFLoader()
-      gltfLoader.load(
-        path,
-        this.loadMonster,
-        // TODO: add a loader.
-        event => {
-          const percentage = (event.loaded / event.total) * 100
-          console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
-        },
-        console.error.bind(console)
-      )
-    })
+        // loading monster with GLTF loader
+        const gltfLoader = new GLTFLoader()
+        gltfLoader.load(
+          path,
+          this.loadMonster,
+          // TODO: add a loader.
+          event => {
+            const percentage = (event.loaded / event.total) * 100
+            console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
+          },
+          console.error.bind(console)
+        )
+      })
 
     // start scene
     this.start()
@@ -342,19 +342,30 @@ class Monster3DProfile extends Component {
     const triggerIdle = [
       ActionType.SLEEPING,
       ActionType.FEEDING,
-      ActionType.DEAD
     ]
 
     if (this.monsterMixer) {
       this.monsterMixer.stopAllAction()
-      this.monsterMixer.clipAction(
-        THREE.AnimationClip.findByName(
-          this.model.animations,
-          triggerIdle.includes(action)
-            ? ActionType.IDLE
-            : action
-        )
-      ).play()
+      if (action === ActionType.DEAD) {
+        const idle = this.monsterMixer.clipAction(
+          THREE.AnimationClip.findByName(
+            this.model.animations,
+            ActionType.IDLE
+          )
+        ).play()
+        setTimeout(
+          () => this.monsterMixer.stopAllAction(),
+          300)
+      } else {
+        this.monsterMixer.clipAction(
+          THREE.AnimationClip.findByName(
+            this.model.animations,
+            triggerIdle.includes(action)
+              ? ActionType.IDLE
+              : action
+          )
+        ).play()
+      }
     }
   }
 
