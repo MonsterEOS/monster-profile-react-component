@@ -44,6 +44,8 @@ class Monster3DProfile extends Component {
     this.controls = new OrbitControls(this.camera, this.mount)
     this.controls.target.set(0, 0, 0)
     this.controls.screenSpacePanning = true
+    this.controls.enableKeys = false
+    this.controls.enablePan = false
     this.controls.enableZoom = zoom
     this.controls.update()
 
