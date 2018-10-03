@@ -1,3 +1,4 @@
+import GLTFLoader from './GLTFLoader';
 /**
  * Returns a function that will be invoked until the timeout is over.
  * This timeout restarts evertime the function gets invoked before
@@ -16,3 +17,17 @@ export const debounce = (ms = 500) => f => {
         )
     }
 }
+
+
+export const gltfLoader = (path, monster) => new Promise((resolve, reject) => {
+    const gltfLoader = new GLTFLoader()
+        gltfLoader.load(
+          path,
+          monster,
+          event => {
+            const percentage = (event.loaded / event.total) * 100
+            console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
+          },
+          reject
+        )
+});

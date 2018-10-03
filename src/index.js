@@ -7,7 +7,7 @@ import OrbitControls from './utils/OrbitControls'
 import injectSheet from 'react-jss'
 import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
-import { debounce } from './utils'
+import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
 
 class Monster3DProfile extends Component {
@@ -23,7 +23,7 @@ class Monster3DProfile extends Component {
     this.prevTime = 0
   }
 
-  componentDidMount() {
+ componentDidMount() {
     const { background, path, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     // default values
@@ -72,23 +72,15 @@ class Monster3DProfile extends Component {
     // make it child of the camera and add it to the scene
     this.camera.add(this.pointLight)
     this.scene.add(this.camera)
-
+    
     VertexStudioMaterial()
-      .then(VertexStudioMaterial => {
+      .then( async VertexStudioMaterial  => {
         this.monsterMaterial = VertexStudioMaterial
-
-        // loading monster with GLTF loader
-        const gltfLoader = new GLTFLoader()
-        gltfLoader.load(
-          path,
-          this.loadMonster,
-          // TODO: add a loader.
-          event => {
-            const percentage = (event.loaded / event.total) * 100
-            console.log(`Loading 3D monster model... ${Math.round(percentage)}%`)
-          },
-          console.error.bind(console)
-        )
+        try {
+          const mons = await gltfLoader(path, this.loadMonster);
+        } catch (error) {
+          console.log(error)
+        }
       })
 
     // start scene
