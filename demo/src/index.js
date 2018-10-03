@@ -1,6 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import monster3D from './assets/models/rock-worm.gltf'
+import {monsters} from './utils/monsterEnum';
+import monster3D from './assets/models/Tucan.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 import monsterDecors from './utils/monsterDecorators';
 
@@ -9,7 +10,9 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentAnimation: ActionType.SLEEPING
+      currentAnimation: ActionType.SLEEPING,
+      //currentMonster : monster3D("Baal"),
+      selectedMonster : monsters[0]
     }
   }
 
@@ -17,8 +20,13 @@ class App extends Component {
     this.setState({ currentAnimation: event.target.value })
   }
 
+  handleMonsterChange = (event) => {
+    //console.log(monster3D(event.target.value));
+    //this.setState({ currentMonster : monster3D(event.target.value) });
+  }
+
   render() {
-    const { currentAnimation } = this.state
+    const { currentAnimation, currentMonster } = this.state
 
     return (
       <Fragment>
@@ -36,6 +44,7 @@ class App extends Component {
           zoom={true}
           decor={monsterDecors.neutral}
         />
+        <label>Select monster's state:</label>
         <select
           value={currentAnimation}
           onChange={this.handleChange}
@@ -47,6 +56,15 @@ class App extends Component {
                 value={ActionType[action]}>
                 {action}
               </option>
+            )
+          )}
+        </select>
+        <br/>
+        <label>Select monster: </label>
+        <select onChange={this.handleMonsterChange}>
+          {monsters.map(
+            action => (
+              <option value={action}>{action}</option>
             )
           )}
         </select>
