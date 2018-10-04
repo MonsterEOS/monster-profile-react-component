@@ -1,7 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import {monsters} from './utils/monsterEnum';
-import monster3D from './assets/models/Tucan.gltf'
+import {monster3D, monsters} from './utils/monsterEnum';
+//import monster3D from './assets/models/Tucan.gltf'
 import { Monster3DProfile, ActionType } from '../../src'
 import monsterDecors from './utils/monsterDecorators';
 
@@ -11,7 +11,7 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.SLEEPING,
-      //currentMonster : monster3D("Baal"),
+      currentMonster : monster3D("Baal"),
       selectedMonster : monsters[0]
     }
   }
@@ -22,7 +22,7 @@ class App extends Component {
 
   handleMonsterChange = (event) => {
     //console.log(monster3D(event.target.value));
-    //this.setState({ currentMonster : monster3D(event.target.value) });
+    this.setState({ currentMonster : monster3D(event.target.value) });
   }
 
   render() {
@@ -33,7 +33,7 @@ class App extends Component {
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          path={monster3D}
+          path={currentMonster}
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}

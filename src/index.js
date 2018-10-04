@@ -87,6 +87,10 @@ class Monster3DProfile extends Component {
     this.start()
   }
 
+  shouldComponentUpdate(newProps, newState){    
+    return !( this.props.path === newProps.path );
+  }
+
   componentWillUnmount() {
     this.stop()
     this.mount.removeChild(this.renderer.domElement)
@@ -204,12 +208,20 @@ class Monster3DProfile extends Component {
     // backup camera to restore it later
     this.backupCamera = this.camera.clone()
 
-    // add scene
+
+    //saving the reference of the showing monster
+    this.lastMonster = this.monster;
+
+    // add monster to scene
     this.scene.add(this.monster)
 
     // start animation
     this.monsterMixer = new THREE.AnimationMixer(this.monster)
     this.loadSleepingObject()
+  }
+
+  dettachMonster = () => {
+    this.scene.remove(this.lastMonster);
   }
 
   loadSleepingObject = () => {
@@ -321,15 +333,25 @@ class Monster3DProfile extends Component {
     }
   }
 
-  applyPropertyUpdate = () => {
-    const { autoRotate, autoRotateSpeed, action } = this.props
+  applyPropertyUpdate = async () => {
+    const { autoRotate, autoRotateSpeed, action, path } = this.props
 
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
 
+    this.dettachMonster();   
+    //Cargar el nuevo monstruo.
+    //Refactoring late
+    try {
+      const mons = await gltfLoader(path, this.loadMonster);
+    } catch (error) {
+      console.log(error)
+    }
+
     // darken or light the monster according to current 'action'
     this.monsterLightColor(action)
+    
   }
 
   // plays the requested animation by the 'action' prop
@@ -368,8 +390,8 @@ class Monster3DProfile extends Component {
   }
 
   render() {
-    const { size, classes } = this.props
-
+    const { size, classes, path } = this.props
+    
     if (this.mount) {
       this.applyPropertyUpdate()
       this.changeStateAnimation()
