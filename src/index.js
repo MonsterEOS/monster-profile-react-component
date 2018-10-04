@@ -229,6 +229,7 @@ class Monster3DProfile extends Component {
   }
 
   dettachMonster = () => {
+    this.camera.remove(this.sleepingObject)
     this.scene.remove(this.lastMonster);
   }
 
@@ -269,7 +270,7 @@ class Monster3DProfile extends Component {
         } else {
           this.camera.remove(this.sleepingObject)
         }
-        // darken or light the monster according to current 'action'
+        // darken or light the monster according to current 'action' -----
         this.monsterLightColor(action)
         this.changeStateAnimation()
       },
@@ -352,7 +353,7 @@ class Monster3DProfile extends Component {
     this.controls.autoRotateSpeed = autoRotateSpeed
 
     this.dettachMonster();   
-    //Cargar el nuevo monstruo.
+    //loading the new monster.
     //Refactoring late
     try {
       const mons = await gltfLoader(path, this.loadMonster);
