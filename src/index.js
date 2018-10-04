@@ -88,7 +88,10 @@ class Monster3DProfile extends Component {
   }
 
   shouldComponentUpdate(newProps, newState){    
-    return !( this.props.path === newProps.path );
+    //return !( this.props.path === newProps.path );
+    //TODO find a way to update animations while update monsters
+    // The select element is changing when you select the same value?
+    return true;
   }
 
   componentWillUnmount() {
@@ -155,6 +158,9 @@ class Monster3DProfile extends Component {
     this.camera.near = size / 1000
     this.camera.far = size * 1000
 
+    //restart position of monster
+    //this.monster.position.set(0,0,0);
+
     // set monster initial position
     this.monster.position.x += (this.monster.position.x - center.x)
     this.monster.position.y += (this.monster.position.y - center.y)
@@ -195,6 +201,8 @@ class Monster3DProfile extends Component {
 
     // set camera initial position
     this.camera.lookAt(center)
+    //default camera position:
+    this.camera.position.set(0,0,0);
     this.camera.position.z += size
 
     // set camera position relative to initial position
@@ -308,10 +316,12 @@ class Monster3DProfile extends Component {
   // darkens or lights the monster, and adds
   // or not, the sleeping z's model.
   monsterLightColor = (action) => {
+    console.log(action);
     if (
       action === ActionType.SLEEPING ||
       action === ActionType.DEAD
     ) {
+      console.log("Sleeping or dead")
       this.darkenMonster()
       if (action !== ActionType.DEAD) {
         if (this.sleepingObject) {
@@ -324,6 +334,7 @@ class Monster3DProfile extends Component {
         this.sleepingMixer &&
           this.sleepingMixer.stopAllAction()
         this.camera.remove(this.sleepingObject)
+        console.log("was the Sleeping object remove?")
       }
     } else {
       this.lightMonster()
