@@ -10,7 +10,7 @@ class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      currentAnimation: ActionType.SLEEPING,
+      currentAnimation: ActionType.IDLE,
       currentMonster : monster3D("Baal"),
       selectedMonster : monsters[0]
     }
@@ -33,7 +33,8 @@ class App extends Component {
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          path={currentMonster}
+          //path={currentMonster} for outside of express
+          path={monster3D(this.props.monster)}
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
@@ -75,7 +76,16 @@ class App extends Component {
   }
 }
 
-render(
+/*render(
   <App />,
   document.querySelector('#demo')
-)
+)*/
+
+window.monsters = monsters
+
+window.renderIt = (monster, node) => {
+  render(
+    <App monster={monster}/>,
+    node
+  );
+}
