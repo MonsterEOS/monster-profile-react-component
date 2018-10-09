@@ -1,6 +1,6 @@
 const puppeteer = require('puppeteer');
 const dataUri = require('image-data-uri');
-const url = 'http://localhost/dist/index.html';
+const url = 'http://localhost:3000';
 const filePath = './images';
 
 const runPuppeter = async () => {
@@ -14,7 +14,7 @@ const runPuppeter = async () => {
         const imageEncoded = await page.$eval('canvas', elem => {
             return elem.toDataURL('image/png');
         });
-        //console.log(tag);
+        console.log(imageEncoded);
         dataUri.outputFile(imageEncoded, filePath+ '/' +Date.now())
             .then(res => console.log(res));
         browser.close();
