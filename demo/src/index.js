@@ -33,8 +33,8 @@ class App extends Component {
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          //path={currentMonster} for outside of express
-          path={monster3D(this.props.monster)}
+          path={currentMonster} for outside of express
+          //path={monster3D(this.props.monster)} for express
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
@@ -76,16 +76,16 @@ class App extends Component {
   }
 }
 
-/*render(
+render(
   <App />,
   document.querySelector('#demo')
-)*/
+)
 
-window.monsters = monsters
 
+/* For snaps only
 window.renderIt = (monster, node) => {
   render(
     <App monster={monster}/>,
     node
   );
-}
+}*/
