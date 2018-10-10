@@ -11,6 +11,8 @@
 /lib
 /umd
 
+# images
+/images
 # misc
 .DS_Store
 .env.local

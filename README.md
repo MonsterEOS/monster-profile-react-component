@@ -62,3 +62,8 @@ const Monster = () =>
 3. `npm install`.
 4. `npm start`.
 5. Demo running at `http://localhost:3000/`. 
+
+## Generating PNG files
+
+1) run the command `npm run snaps`
+2) This command will generate a folder inside snapshots directory containing the png files of all monsters.

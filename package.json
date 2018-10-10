@@ -20,7 +20,8 @@
     "start": "nwb serve-react-demo",
     "test": "nwb test-react",
     "test:coverage": "nwb test-react --coverage",
-    "test:watch": "nwb test-react --server"
+    "test:watch": "nwb test-react --server",
+    "snaps" : "node ./snapshots/app/bin/www"
   },
   "dependencies": {
     "react-jss": "^8.6.1"

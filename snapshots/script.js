@@ -1,18 +1,18 @@
 const puppeteer = require('puppeteer');
 const dataUri = require('image-data-uri');
-const url = 'http://localhost:3000';
-const filePath = './images';
+const url = 'http://localhost:';
+const filePath = './snapshots/images';
 const monsters = ["Baal","BadChicken", "Bat", "Bear", "Beetle", "Butterfly", "Cactus", "Cerberus", "Devil", "Duck", "Dwarf", "Egg", "Frog",
 "Ghost", "MetalGuitar", "Minion", "Ness", "Ogre", "Penguin", "RockWorm", "Rocky", "Scorpion", "Serpent", "Spider", "TheThing", "Toad", 
 "Tree", "Troll", "Tucan", "Vampire", "Wolf", "Worm"];
 
 
-const runPuppeter = async () => {
+const takeSnaps = async (port) => {
     const browser = await puppeteer.launch({ devtools: false });
     const page = await browser.newPage();
 
     console.log("Entering page...");
-    await page.goto(url);
+    await page.goto(url+port);
 
     console.log("Generating snaps, may take a while");
 
@@ -43,5 +43,7 @@ const runPuppeter = async () => {
 
 }
 
+
 //levantar express
-runPuppeter();
+//runPuppeter();
+module.exports = takeSnaps;
