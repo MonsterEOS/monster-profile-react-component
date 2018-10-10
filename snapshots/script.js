@@ -2,50 +2,46 @@ const puppeteer = require('puppeteer');
 const dataUri = require('image-data-uri');
 const url = 'http://localhost:3000';
 const filePath = './images';
-
+const monsters = ["Baal","BadChicken", "Bat", "Bear", "Beetle", "Butterfly", "Cactus", "Cerberus", "Devil", "Duck", "Dwarf", "Egg", "Frog",
+"Ghost", "MetalGuitar", "Minion", "Ness", "Ogre", "Penguin", "RockWorm", "Rocky", "Scorpion", "Serpent", "Spider", "TheThing", "Toad", 
+"Tree", "Troll", "Tucan", "Vampire", "Wolf", "Worm"];
 
 
 const runPuppeter = async () => {
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({ devtools: false });
     const page = await browser.newPage();
 
     console.log("Entering page...");
     await page.goto(url);
 
-    console.log("Generating snaps, may take a while");    
+    console.log("Generating snaps, may take a while");
 
-    const imageEncoded = await page.evaluate(() => {
-        return Promise.all(
-            monsters.map(async (monster) => {
-                
-                renderIt(monster, document.querySelector("#demo"));
-                await ((ms = 3000) =>
-                    new Promise((resolve, reject) => {
-                        try {
-                            setTimeout(resolve, ms)
-                        } catch (error) {
-                            reject(error)
-                        }
-                    }))()
-                return document.querySelector("canvas").toDataURL('image/png');
-            })
-        ).then(values => (values)) 
-    })
-    
+    for (index in monsters) {
+        const imageEncoded = await page.evaluate( async (monster) => {
 
-
-    //Debuggin purpuses...
-    await page.screenshot({ path: './image.jpg', type: 'jpeg' });
-    console.log(imageEncoded)
-    // saving the snap into the specified folder
-    /*dataUri.outputFile(imageEncoded[0], filePath + '/' + Date.now())
-        .then(res => console.log(res));*/
+            renderIt(monster, document.querySelector("#demo"));
+            await((ms = 2000) =>
+                new Promise((resolve, reject) => {
+                    try {
+                        setTimeout(resolve, ms)
+                    } catch (error) {
+                        reject(error)
+                    }
+                }))()
+            //debugger
+            return document.querySelector("canvas").toDataURL('image/png')
+            
+            
+        }, monsters[index])
+        console.log("Generating: " + monsters[index] + " ...")
+        dataUri.outputFile(imageEncoded, filePath + '/' + monsters[index] + '_' + Date.now())
+        .then(res => console.log(res));
+    } 
     console.log("Closing connection...");
     await browser.close();
-    console.log("DONE!");
-
-    //levantar express
+    console.log("DONE!");   
 
 }
 
+//levantar express
 runPuppeter();

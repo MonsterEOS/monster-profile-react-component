@@ -27,7 +27,7 @@ class App extends Component {
 
   render() {
     const { currentAnimation, currentMonster } = this.state
-
+    console.log(monster3D(this.props.monster))
     return (
       <Fragment>
         <h1>Monster3DProfile</h1>
