@@ -1,15 +1,16 @@
 {
   "name": "snapshots",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node ./bin/www"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
+    "cookie-parser": "~1.4.3",
+    "debug": "~2.6.9",
+    "express": "~4.16.0",
     "image-data-uri": "^2.0.0",
+    "morgan": "~1.9.0",
     "puppeteer": "^1.9.0"
   }
 }
