@@ -23,7 +23,7 @@ class Monster3DProfile extends Component {
     this.prevTime = 0
   }
 
- componentDidMount() {
+  componentDidMount() {
     const { background, path, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     // default values
@@ -72,9 +72,9 @@ class Monster3DProfile extends Component {
     // make it child of the camera and add it to the scene
     this.camera.add(this.pointLight)
     this.scene.add(this.camera)
-    
+
     VertexStudioMaterial()
-      .then( async VertexStudioMaterial  => {
+      .then(async VertexStudioMaterial => {
         this.monsterMaterial = VertexStudioMaterial
         try {
           const mons = await gltfLoader(path, this.loadMonster);
@@ -87,7 +87,7 @@ class Monster3DProfile extends Component {
     this.start()
   }
 
-  shouldComponentUpdate(newProps, newState){    
+  shouldComponentUpdate(newProps, newState) {
     //return !( this.props.path === newProps.path );
     //TODO find a way to update animations while update monsters
     // The select element is changing when you select the same value?
@@ -202,7 +202,7 @@ class Monster3DProfile extends Component {
     // set camera initial position
     this.camera.lookAt(center)
     //default camera position:
-    this.camera.position.set(0,0,0);
+    this.camera.position.set(0, 0, 0);
     this.camera.position.z += size
 
     // set camera position relative to initial position
@@ -317,12 +317,10 @@ class Monster3DProfile extends Component {
   // darkens or lights the monster, and adds
   // or not, the sleeping z's model.
   monsterLightColor = (action) => {
-    console.log(action);
     if (
       action === ActionType.SLEEPING ||
       action === ActionType.DEAD
     ) {
-      console.log("Sleeping or dead")
       this.darkenMonster()
       if (action !== ActionType.DEAD) {
         if (this.sleepingObject) {
@@ -335,7 +333,6 @@ class Monster3DProfile extends Component {
         this.sleepingMixer &&
           this.sleepingMixer.stopAllAction()
         this.camera.remove(this.sleepingObject)
-        console.log("was the Sleeping object remove?")
       }
     } else {
       this.lightMonster()
@@ -352,7 +349,7 @@ class Monster3DProfile extends Component {
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
 
-    this.dettachMonster();   
+    this.dettachMonster();
     //loading the new monster.
     //Refactoring late
     try {
@@ -363,7 +360,7 @@ class Monster3DProfile extends Component {
 
     // darken or light the monster according to current 'action'
     this.monsterLightColor(action)
-    
+
   }
 
   // plays the requested animation by the 'action' prop
@@ -403,7 +400,7 @@ class Monster3DProfile extends Component {
 
   render() {
     const { size, classes, path } = this.props
-    
+
     if (this.mount) {
       this.applyPropertyUpdate()
       this.changeStateAnimation()
@@ -422,21 +419,23 @@ class Monster3DProfile extends Component {
   }
 }
 
+function validateAction(props, propName, componentName) {
+  const validActions = Object.keys(ActionType).map(
+    key => ActionType[key]
+  )
+  if (!validActions.includes(props[propName])) {
+    return new Error(
+      `Invalid ${propName} supplied to ${componentName}. ` +
+      `Use the ActionType enum to supply a valid value. ` +
+      `Valid values are: Idle, Attack, HitReact, Sleeping, ` +
+      `Feeding and Dead.`
+    )
+  }
+}
+
 Monster3DProfile.propTypes = {
   typeId: PropTypes.string.isRequired,
-  action: function (props, propName, componentName) {
-    const validActions = Object.keys(ActionType).map(
-      key => ActionType[key]
-    )
-    if (!validActions.includes(props[propName])) {
-      return new Error(
-        `Invalid ${propName} supplied to ${componentName}. ` +
-        `Use the ActionType enum to supply a valid value. ` +
-        `Valid values are: Idle, Attack, HitReact, Sleeping, ` +
-        `Feeding and Dead.`
-      )
-    }
-  },
+  action: validateAction,
   path: PropTypes.string.isRequired,
   position: PropTypes.shape({
     x: PropTypes.number,
