@@ -65,5 +65,11 @@ const Monster = () =>
 
 ## Generating PNG files
 
-1) run the command `npm run snaps`
-2) This command will generate a folder inside snapshots directory containing the png files of all monsters.
+1) Change the property to `true` into the file `demo/src/utils/env.js`
+2) Change execution permissions on `snaps.sh` file with: `chmod u+x snaps.sh`
+3) Navigate to snapshots folder `cd snapshots/` and type `npm install`
+4) Go back to the main directory `cd ../`
+5) Run the script `./snaps.sh`
+6) Wait...
+7) This command will generate a images folder inside snapshots directory containing the png files of all monsters.
+8) Do not forget to change the property on the file `demo/src/utils/env.js` to `false`

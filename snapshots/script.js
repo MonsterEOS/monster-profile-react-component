@@ -6,7 +6,6 @@ const monsters = ["Baal", "BadChicken", "Bat", "Bear", "Beetle", "Butterfly", "C
     "Ghost", "MetalGuitar", "Minion", "Ness", "Ogre", "Penguin", "RockWorm", "Rocky", "Scorpion", "Serpent", "Spider", "TheThing", "Toad",
     "Tree", "Troll", "Tucan", "Vampire", "Wolf", "Worm"];
 
-
 const takeSnaps = async (port) => {
     const browser = await puppeteer.launch({ devtools: false });
     const page = await browser.newPage();
@@ -20,7 +19,7 @@ const takeSnaps = async (port) => {
         const imageEncoded = await page.evaluate(async (monster) => {
 
             renderIt(monster, document.querySelector("#demo"));
-            await ((ms = 2000) =>
+            await ((ms = 1500) =>
                 new Promise((resolve, reject) => {
                     try {
                         setTimeout(resolve, ms)
