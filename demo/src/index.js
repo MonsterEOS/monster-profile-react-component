@@ -1,7 +1,6 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import {monster3D, monsters} from './utils/monsterEnum';
-//import monster3D from './assets/models/Tucan.gltf'
+import { monster3D, monsters } from './utils/monsterEnum';
 import { Monster3DProfile, ActionType } from '../../src'
 import monsterDecors from './utils/monsterDecorators';
 
@@ -11,8 +10,8 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.IDLE,
-      currentMonster : monster3D("Baal"),
-      selectedMonster : monsters[0]
+      currentMonster: monster3D("Baal"),
+      selectedMonster: monsters[0]
     }
   }
 
@@ -22,18 +21,17 @@ class App extends Component {
 
   handleMonsterChange = (event) => {
     //console.log(monster3D(event.target.value));
-    this.setState({ currentMonster : monster3D(event.target.value) });
+    this.setState({ currentMonster: monster3D(event.target.value) });
   }
 
   render() {
     const { currentAnimation, currentMonster } = this.state
-    console.log(monster3D(this.props.monster))
     return (
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          path={currentMonster} for outside of express
+          path={currentMonster} // for outside of express
           //path={monster3D(this.props.monster)} for express
           action={currentAnimation}
           size={{ height: "600px" }}
@@ -45,7 +43,21 @@ class App extends Component {
           zoom={true}
           decor={monsterDecors.neutral}
         />
-        <label>Select monster's state:</label>
+        <br />
+        <label>Select monster: </label>
+        <select onChange={this.handleMonsterChange}>
+          {monsters.map(
+            monster => (
+              <option
+                key={monster}
+                value={monster}>
+                {monster}
+              </option>
+            )
+          )}
+        </select>
+        <br />
+        <label>Select monster's state: </label>
         <select
           value={currentAnimation}
           onChange={this.handleChange}
@@ -57,15 +69,6 @@ class App extends Component {
                 value={ActionType[action]}>
                 {action}
               </option>
-            )
-          )}
-        </select>
-        <br/>
-        <label>Select monster: </label>
-        <select onChange={this.handleMonsterChange}>
-          {monsters.map(
-            action => (
-              <option value={action}>{action}</option>
             )
           )}
         </select>
