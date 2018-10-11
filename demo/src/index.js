@@ -1,8 +1,10 @@
+//require('dotenv').config()
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import { monster3D, monsters } from './utils/monsterEnum';
+import { monster3D, monsters } from './utils/monsterEnum'
 import { Monster3DProfile, ActionType } from '../../src'
-import monsterDecors from './utils/monsterDecorators';
+import monsterDecors from './utils/monsterDecorators'
+import isSnaps from './utils/env'
 
 class App extends Component {
   constructor(props) {
@@ -23,15 +25,16 @@ class App extends Component {
 
   render() {
     const { currentAnimation, currentMonster } = this.state
+
     return (
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          path={currentMonster}
+          path={isSnaps ? monster3D(this.props.monster) : currentMonster }
           action={currentAnimation}
           size={{ height: "600px" }}
-          background={{ alpha: 1 }}
+          background={{ alpha: isSnaps ? 0 : 1}}
           exposure={2}
           ambientColor={0xffffff}
           directIntensity={3}
@@ -74,8 +77,15 @@ class App extends Component {
     )
   }
 }
-
-render(
-  <App />,
-  document.querySelector('#demo')
-)
+if(isSnaps){
+  window.renderIt = (monster, node) => {
+    render(
+      <App monster={monster}/>,
+      node
+    )}
+}else{
+  render(
+    <App />,
+    document.querySelector('#demo')
+  )
+}
