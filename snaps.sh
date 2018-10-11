@@ -1,6 +1,8 @@
 #!/bin/bash
+set -o errexit
+DIR="snapshots/public/"
 
-DIR="snapshots/app/public/"
+
 
 #building component
 npm run build
@@ -11,14 +13,16 @@ then
     rm -r snapshots/images/
 fi
 
+mkdir -p snapshots/public
+
 # verify if public directory is empty
 if [ "$(ls -A $DIR)" ] 
 then
-    rm snapshots/app/public/*
+    rm snapshots/public/*
 fi
 
 #copying demo/dist
-cp demo/dist/* snapshots/app/public/
+cp demo/dist/* snapshots/public/
 
 # generating snaps
 npm run snaps

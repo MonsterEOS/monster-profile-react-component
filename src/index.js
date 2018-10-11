@@ -87,13 +87,6 @@ class Monster3DProfile extends Component {
     this.start()
   }
 
-  shouldComponentUpdate(newProps, newState) {
-    //return !( this.props.path === newProps.path );
-    //TODO find a way to update animations while update monsters
-    // The select element is changing when you select the same value?
-    return true;
-  }
-
   componentWillUnmount() {
     this.stop()
     this.mount.removeChild(this.renderer.domElement)

@@ -6,9 +6,6 @@ const monsters = ["Baal", "BadChicken", "Bat", "Bear", "Beetle", "Butterfly", "C
     "Ghost", "MetalGuitar", "Minion", "Ness", "Ogre", "Penguin", "RockWorm", "Rocky", "Scorpion", "Serpent", "Spider", "TheThing", "Toad",
     "Tree", "Troll", "Tucan", "Vampire", "Wolf", "Worm"];
 
-    /* Check if images exists */
-    
-
 const takeSnaps = async (port) => {
     const browser = await puppeteer.launch({ devtools: false });
     const page = await browser.newPage();

@@ -1,4 +1,3 @@
-//require('dotenv').config()
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
 import { monster3D, monsters } from './utils/monsterEnum'
