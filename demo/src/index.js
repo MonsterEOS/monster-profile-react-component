@@ -4,7 +4,6 @@ import { monster3D, monsters } from './utils/monsterEnum';
 import { Monster3DProfile, ActionType } from '../../src'
 import monsterDecors from './utils/monsterDecorators';
 
-
 class App extends Component {
   constructor(props) {
     super(props)
@@ -19,10 +18,8 @@ class App extends Component {
     this.setState({ currentAnimation: event.target.value })
   }
 
-  handleMonsterChange = (event) => {
-    //console.log(monster3D(event.target.value));
-    this.setState({ currentMonster: monster3D(event.target.value) });
-  }
+  handleMonsterChange = (event) =>
+    this.setState({ currentMonster: monster3D(event.target.value) })
 
   render() {
     const { currentAnimation, currentMonster } = this.state
@@ -31,8 +28,7 @@ class App extends Component {
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId="devil"
-          path={currentMonster} // for outside of express
-          //path={monster3D(this.props.monster)} for express
+          path={currentMonster}
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: 1 }}
@@ -83,12 +79,3 @@ render(
   <App />,
   document.querySelector('#demo')
 )
-
-
-/* For snaps only
-window.renderIt = (monster, node) => {
-  render(
-    <App monster={monster}/>,
-    node
-  );
-}*/
