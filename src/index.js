@@ -9,6 +9,7 @@ import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
 import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
+import monster3D from './utils/monsterEnum';
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -24,8 +25,13 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    const { background, path, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
+    //Change path by typeId
+    const { background, typeId, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
+    //DEBUGGIN
+    console.log("-*--*-*-*-*-*-*-*-**-*-")
+    console.log(monster3D(typeId))
+    console.log("-*--*-*-*-*-*-*-*-**-*-")
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
     const canvasBackground = { ...defaultBackground, ...background }
@@ -77,7 +83,7 @@ class Monster3DProfile extends Component {
       .then(async VertexStudioMaterial => {
         this.monsterMaterial = VertexStudioMaterial
         try {
-          const mons = await gltfLoader(path, this.loadMonster);
+          const mons = await gltfLoader(monster3D(typeId), this.loadMonster);
         } catch (error) {
           console.log(error)
         }
@@ -336,7 +342,9 @@ class Monster3DProfile extends Component {
   }
 
   applyPropertyUpdate = async () => {
-    const { autoRotate, autoRotateSpeed, action, path } = this.props
+
+    //Change path by typeId
+    const { autoRotate, autoRotateSpeed, action, typeId } = this.props
 
     // controls
     this.controls.autoRotate = autoRotate
@@ -345,8 +353,12 @@ class Monster3DProfile extends Component {
     this.dettachMonster();
     //loading the new monster.
     //Refactoring late
+
+    /*
+      const path = monster3D("Baal").path;
+    */
     try {
-      const mons = await gltfLoader(path, this.loadMonster);
+      const mons = await gltfLoader(monster3D(typeId), this.loadMonster);
     } catch (error) {
       console.log(error)
     }
@@ -392,7 +404,7 @@ class Monster3DProfile extends Component {
   }
 
   render() {
-    const { size, classes, path } = this.props
+    const { size, classes } = this.props
 
     if (this.mount) {
       this.applyPropertyUpdate()
@@ -429,7 +441,7 @@ function validateAction(props, propName, componentName) {
 Monster3DProfile.propTypes = {
   typeId: PropTypes.string.isRequired,
   action: validateAction,
-  path: PropTypes.string.isRequired,
+  //path: PropTypes.string.isRequired,
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,
