@@ -10,7 +10,7 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.IDLE,
-      currentMonster: monster3D("Baal"),
+      currentMonster: "Baal",
       selectedMonster: monsters[0]
     }
   }
@@ -20,7 +20,7 @@ class App extends Component {
   }
 
   handleMonsterChange = (event) =>
-    this.setState({ currentMonster: monster3D(event.target.value) })
+    this.setState({ currentMonster: event.target.value })
 
   render() {
     const { currentAnimation, currentMonster } = this.state
@@ -29,8 +29,8 @@ class App extends Component {
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
-          typeId="devil"
-          path={isSnaps ? monster3D(this.props.monster) : currentMonster }
+          typeId={isSnaps ? this.props.monster : currentMonster }
+          //path={isSnaps ? this.props.monster : currentMonster }
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: isSnaps ? 0 : 1}}
