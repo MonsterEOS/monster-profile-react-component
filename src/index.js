@@ -9,7 +9,8 @@ import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
 import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
-import monster3D from './utils/monsterEnum';
+import monster3D from './utils/monsterEnum'
+import monsterConfig from './utils/monsterConfiguration'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -29,9 +30,7 @@ class Monster3DProfile extends Component {
     const { background, typeId, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     //DEBUGGIN
-    console.log("-*--*-*-*-*-*-*-*-**-*-")
-    console.log(monster3D(typeId))
-    console.log("-*--*-*-*-*-*-*-*-**-*-")
+    
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
     const canvasBackground = { ...defaultBackground, ...background }
@@ -142,12 +141,18 @@ class Monster3DProfile extends Component {
     this.model = gltf
     this.monster = this.model.scene
 
-    const { rotation, action, position, cameraPosition } = this.props
+    const { rotation, action, position, cameraPosition, typeId } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
-    const monsterRot = { ...defaultValues, ...rotation }
-    const monsterPos = { ...defaultValues, ...position }
-    const cameraPos = { ...defaultValues, ...cameraPosition }
-
+    console.log("*/*/*/*/*/*/*/*/*/*/*/*/*")
+    console.log(cameraPosition)
+    console.log(rotation)
+    console.log(position)
+    console.log("*/*/*/*/*/*/*/*/*/*/*/*/*")
+    const configuration = monsterConfig(typeId)
+    const monsterRot = { ...defaultValues, ...configuration.rotation }
+    const monsterPos = { ...defaultValues, ...configuration.position }
+    const cameraPos = { ...defaultValues, ...configuration.cameraPosition }
+    
     // center monster
     const box = new THREE.Box3().setFromObject(this.monster)
     const size = box.getSize(new THREE.Vector3()).length()
