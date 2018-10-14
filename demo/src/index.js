@@ -30,14 +30,12 @@ class App extends Component {
 
   render() {
     const { currentAnimation, currentMonster, currentShader } = this.state
-    console.log("Decorator:" + currentShader)
 
     return (
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
           typeId={isSnaps ? this.props.monster : currentMonster }
-          //path={isSnaps ? this.props.monster : currentMonster }
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: isSnaps ? 0 : 1}}

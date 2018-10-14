@@ -27,7 +27,7 @@ class Monster3DProfile extends Component {
   }
 
   componentDidMount() {
-    //Change path by typeId
+    
     const { background, typeId, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
     //DEBUGGIN
@@ -158,8 +158,6 @@ class Monster3DProfile extends Component {
     this.camera.near = size / 1000
     this.camera.far = size * 1000
 
-    //restart position of monster
-    //this.monster.position.set(0,0,0);
 
     // set monster initial position
     this.monster.position.x += (this.monster.position.x - center.x)
@@ -179,8 +177,6 @@ class Monster3DProfile extends Component {
     // updates global transform of the monster
     this.monster.updateMatrixWorld()
 
-    console.log("/**/*/*/*")
-    console.log(this.props.decor)
 
     this.monster.traverse(child => {
       if (child.isMesh) {
@@ -347,7 +343,7 @@ class Monster3DProfile extends Component {
 
   applyPropertyUpdate = async () => {
 
-    //Change path by typeId
+    
     const { autoRotate, autoRotateSpeed, action, typeId } = this.props
 
     // controls
@@ -355,12 +351,7 @@ class Monster3DProfile extends Component {
     this.controls.autoRotateSpeed = autoRotateSpeed
 
     this.dettachMonster();
-    //loading the new monster.
-    //Refactoring late
-
-    /*
-      const path = monster3D("Baal").path;
-    */
+    
     try {
       const mons = await gltfLoader(monster3D(typeId), this.loadMonster);
     } catch (error) {
@@ -445,7 +436,7 @@ function validateAction(props, propName, componentName) {
 Monster3DProfile.propTypes = {
   typeId: PropTypes.string.isRequired,
   action: validateAction,
-  //path: PropTypes.string.isRequired,
+  
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,

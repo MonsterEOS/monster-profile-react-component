@@ -24,10 +24,9 @@ import { Monster3DProfile, ActionType } from 'react-monstereos-profile'
 
 const Monster = () =>
     <Monster3DProfile
-        typeId="devil"
-        path={monster3D}
+        typeId="Baal"        
         action={ActionType.IDLE}
-        position={{ y: -50 }}
+        decor="ice"
         size={{ height: "600px" }}
         background={{ alpha: 1 }}
         zoom={false}
@@ -37,12 +36,9 @@ const Monster = () =>
 ### Component properties
 | Name             | Type     | Default                              | Description                                                                                        |
 | ---------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| typeId           | `string` |                                      | Monster ID.                                                                                        |
-| path             | `string` |                                      | Path to .gltf file (monster 3D model).                                                             |
+| typeId           | `string` | `Baal`                               | Monster name, examples: "Baal", "BadChicken", "Bat", "Bear", "Beetle", "Butterfly".                |
+| decor            | `string` | `neutral`                            | Name of the type of monster to apply, examples: "metal", "neutral", "fire".                        |   
 | action           | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
-| position         | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's position.                                                                        |
-| rotation         | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial monster's rotation. Values must be in radians.                                             |
-| cameraPosition   | `object` | `{ x: 0, y: 0, z: 0 }`               | Initial cameras's position.                                                                        |
 | autoRotate       | `bool`   | `false`                              | Enables autorotation.                                                                              |
 | autoRotateSpeed  | `number` | `-10`                                | If autorotation is enabled, defines its speed.                                                     |
 | exposure         | `number` | `1`                                  | Exposure level of tone mapping.                                                                    |
