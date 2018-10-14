@@ -11,6 +11,7 @@ import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
 import monster3D from './utils/monsterEnum'
 import monsterConfig from './utils/monsterConfiguration'
+import monsterDecor from './utils/monsterDecorators'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -143,11 +144,6 @@ class Monster3DProfile extends Component {
 
     const { rotation, action, position, cameraPosition, typeId } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
-    console.log("*/*/*/*/*/*/*/*/*/*/*/*/*")
-    console.log(cameraPosition)
-    console.log(rotation)
-    console.log(position)
-    console.log("*/*/*/*/*/*/*/*/*/*/*/*/*")
     const configuration = monsterConfig(typeId)
     const monsterRot = { ...defaultValues, ...configuration.rotation }
     const monsterPos = { ...defaultValues, ...configuration.position }
@@ -183,18 +179,21 @@ class Monster3DProfile extends Component {
     // updates global transform of the monster
     this.monster.updateMatrixWorld()
 
+    console.log("/**/*/*/*")
+    console.log(this.props.decor)
+
     this.monster.traverse(child => {
       if (child.isMesh) {
         if (child.material[0]) {
           child.material.forEach((material, idx) => {
             if (material.map) {
-              child.material[idx] = this.monsterMaterial(material.map, this.props.decor)
+              child.material[idx] = this.monsterMaterial(material.map, monsterDecor(this.props.decor))
             }
           })
         }
         else {
           if (child.material.map) {
-            child.material = this.monsterMaterial(child.material.map, this.props.decor)
+            child.material = this.monsterMaterial(child.material.map, monsterDecor(this.props.decor))
           }
         }
       }

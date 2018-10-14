@@ -1,8 +1,7 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import { monster3D, monsters } from './utils/monsterEnum'
+import { decorations, monsters } from './utils/monsterEnum'
 import { Monster3DProfile, ActionType } from '../../src'
-import monsterDecors from './utils/monsterDecorators'
 import isSnaps from './utils/env'
 
 class App extends Component {
@@ -11,7 +10,8 @@ class App extends Component {
     this.state = {
       currentAnimation: ActionType.IDLE,
       currentMonster: "Baal",
-      selectedMonster: monsters[0]
+      selectedMonster: monsters[0],
+      currentShader: "neutral"
     }
   }
 
@@ -19,11 +19,18 @@ class App extends Component {
     this.setState({ currentAnimation: event.target.value })
   }
 
-  handleMonsterChange = (event) =>
+  handleMonsterChange = (event) => {
     this.setState({ currentMonster: event.target.value })
+  }
+
+  handleShaderChange = (event) => {
+    this.setState({ currentShader: event.target.value })
+  }
+  
 
   render() {
-    const { currentAnimation, currentMonster } = this.state
+    const { currentAnimation, currentMonster, currentShader } = this.state
+    console.log("Decorator:" + currentShader)
 
     return (
       <Fragment>
@@ -39,7 +46,7 @@ class App extends Component {
           directIntensity={3}
           directColor={0xffffff}
           zoom={true}
-          decor={monsterDecors.neutral}
+          decor={currentShader}
         />
         <br />
         <label>Select monster: </label>
@@ -50,6 +57,19 @@ class App extends Component {
                 key={monster}
                 value={monster}>
                 {monster}
+              </option>
+            )
+          )}
+        </select>
+        <br />
+        <label>Select Type: </label>
+        <select onChange={this.handleShaderChange}>
+          {decorations.map(
+            elem => (
+              <option
+                key={elem}
+                value={elem}>
+                {elem}
               </option>
             )
           )}
