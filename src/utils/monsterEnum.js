@@ -32,9 +32,7 @@ import Wolf from './models/wolf.gltf'
 import Worm from './models/worm.gltf'
 
 export default (monster) => {
-    console.log("-*-*--*-*-*-*-*-*-*-*-*-*-")
-    console.log(monster);
-    console.log("*/*/*/*/*/*/*/");
+    
     switch (monster) {
         case "Baal":
             return Baal;
