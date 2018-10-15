@@ -1,6 +1,4 @@
-export const monsters = ["Baal","BadChicken", "Bat", "Bear", "Beetle", "Butterfly", "Cactus", "Cerberus", "Devil", "Duck", "Dwarf", "Egg", "Frog",
-                        "Ghost", "MetalGuitar", "Minion", "Ness", "Ogre", "Penguin", "RockWorm", "Rocky", "Scorpion", "Serpent", "Spider", "TheThing", "Toad", 
-                        "Tree", "Troll", "Tucan", "Vampire", "Wolf", "Worm"];
+export const monsters = [2, 39, 8, 10, 13, 15, 21, 25, 28, 38, 43, 49];
 
-export const decorations = ["neutral", "animal", "fire", "ice", "metal", "poison", "water", "earth", "wood", "light", "dead", "undead"]
+
 

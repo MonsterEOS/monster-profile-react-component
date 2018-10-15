@@ -10,9 +10,9 @@ export const monsterDecors = {
       diffuse: 0x808080,
       emissive: 0x000000,
       hue: 0.0,
-      saturation: 1.2,
+      saturation: 1.5,
       rimPower: 0.4,
-      rimIntensity: 0.2,
+      rimIntensity: 0.4,
       rimColor: 0x00aedb,
     }
   },
