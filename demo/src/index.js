@@ -9,7 +9,7 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.IDLE,
-      currentMonster: 39,
+      currentMonster: 72,
       selectedMonster: monsters[0],
       currentShader: "neutral"
     }

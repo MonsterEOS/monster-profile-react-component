@@ -61,7 +61,7 @@ export default monster => {
             return Frog;
         case "ghost":
             return Ghost;
-        case "metalGuitar":
+        case "metal-guitar":
             return MetalGuitar;
         case "minion":
             return Minion;
@@ -71,7 +71,7 @@ export default monster => {
             return Ogre;
         case "penguin":
             return Penguin;
-        case "rockWorm":
+        case "rock-worm":
             return RockWorm;
         case "rocky":
             return Rocky;
