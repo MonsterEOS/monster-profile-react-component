@@ -35,7 +35,7 @@ class App extends Component {
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
-          typeId={isSnaps ? this.props.monster : currentMonster }
+          typeId={isSnaps ? this.props.monster : 108 }          
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: isSnaps ? 0 : 1}}
@@ -47,31 +47,7 @@ class App extends Component {
           decor={currentShader}
         />
         <br />
-        <label>Select monster: </label>
-        <select onChange={this.handleMonsterChange}>
-          {monsters.map(
-            monster => (
-              <option
-                key={monster}
-                value={monster}>
-                {monster}
-              </option>
-            )
-          )}
-        </select>
-        <br />
-        <label>Select Type: </label>
-        <select onChange={this.handleShaderChange}>
-          {decorations.map(
-            elem => (
-              <option
-                key={elem}
-                value={elem}>
-                {elem}
-              </option>
-            )
-          )}
-        </select>
+        
         <br />
         <label>Select monster's state: </label>
         <select

@@ -9,9 +9,9 @@ import styles from './styles'
 import sleeping from '../models/ZZZ.gltf'
 import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
-import monster3D from './utils/monsterEnum'
-import monsterConfig from './utils/monsterConfiguration'
-import monsterDecor from './utils/monsterDecorators'
+import monsterModelSrc from './utils/monsterEnum'
+import monsterType from './utils/monster3DMatrix'
+
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -26,9 +26,12 @@ class Monster3DProfile extends Component {
     this.prevTime = 0
   }
 
-  componentDidMount() {
-    
+  async componentDidMount() {
+        
     const { background, typeId, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
+
+    this.mon = monsterType(typeId)
+    
 
     //DEBUGGIN
     
@@ -79,11 +82,12 @@ class Monster3DProfile extends Component {
     this.camera.add(this.pointLight)
     this.scene.add(this.camera)
 
+    const gltfModel = await monsterModelSrc(this.mon.model) 
     VertexStudioMaterial()
       .then(async VertexStudioMaterial => {
         this.monsterMaterial = VertexStudioMaterial
         try {
-          const mons = await gltfLoader(monster3D(typeId), this.loadMonster);
+          await gltfLoader(gltfModel.default, this.loadMonster);
         } catch (error) {
           console.log(error)
         }
@@ -144,7 +148,8 @@ class Monster3DProfile extends Component {
 
     const { rotation, action, position, cameraPosition, typeId } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
-    const configuration = monsterConfig(typeId)
+    //typeId
+    const configuration = monsterType(typeId)
     const monsterRot = { ...defaultValues, ...configuration.rotation }
     const monsterPos = { ...defaultValues, ...configuration.position }
     const cameraPos = { ...defaultValues, ...configuration.cameraPosition }
@@ -183,13 +188,13 @@ class Monster3DProfile extends Component {
         if (child.material[0]) {
           child.material.forEach((material, idx) => {
             if (material.map) {
-              child.material[idx] = this.monsterMaterial(material.map, monsterDecor(this.props.decor))
+              child.material[idx] = this.monsterMaterial(material.map,this.mon.decor )
             }
           })
         }
         else {
           if (child.material.map) {
-            child.material = this.monsterMaterial(child.material.map, monsterDecor(this.props.decor))
+            child.material = this.monsterMaterial(child.material.map,this.mon.decor )
           }
         }
       }
@@ -351,9 +356,9 @@ class Monster3DProfile extends Component {
     this.controls.autoRotateSpeed = autoRotateSpeed
 
     this.dettachMonster();
-    
+    const gltfModel = await monsterModelSrc(this.mon.model)
     try {
-      const mons = await gltfLoader(monster3D(typeId), this.loadMonster);
+      await gltfLoader(gltfModel.default, this.loadMonster);
     } catch (error) {
       console.log(error)
     }

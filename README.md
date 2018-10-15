@@ -24,7 +24,7 @@ import { Monster3DProfile, ActionType } from 'react-monstereos-profile'
 
 const Monster = () =>
     <Monster3DProfile
-        typeId="Baal"        
+        typeId = 0        
         action={ActionType.IDLE}
         decor="ice"
         size={{ height: "600px" }}
@@ -36,7 +36,7 @@ const Monster = () =>
 ### Component properties
 | Name             | Type     | Default                              | Description                                                                                        |
 | ---------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
-| typeId           | `string` | `Baal`                               | Monster name, examples: "Baal", "BadChicken", "Bat", "Bear", "Beetle", "Butterfly".                |
+| typeId           | `string` | 0                               | Monster type id               |
 | decor            | `string` | `neutral`                            | Name of the type of monster to apply, examples: "metal", "neutral", "fire".                        |   
 | action           | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
 | autoRotate       | `bool`   | `false`                              | Enables autorotation.                                                                              |
