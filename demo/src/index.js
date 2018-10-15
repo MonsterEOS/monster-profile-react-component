@@ -21,14 +21,9 @@ class App extends Component {
 
   handleMonsterChange = (event) => {
     
-    this.setState({ currentMonster: parseInt(event.target.value) })
+    //this.setState({ currentMonster: parseInt(event.target.value) })
     
   }
-
-  handleShaderChange = (event) => {
-    this.setState({ currentShader: event.target.value })
-  }
-  
 
   render() {
     const { currentAnimation, currentMonster, currentShader } = this.state
