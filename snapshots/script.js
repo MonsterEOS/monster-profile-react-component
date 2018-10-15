@@ -2,7 +2,7 @@ const puppeteer = require('puppeteer');
 const dataUri = require('image-data-uri');
 const url = 'http://localhost';
 const filePath = './snapshots/images';
-const monsters = [2, 39, 8, 10, 13, 15, 21, 25, 28, 38, 43, 49,45,99,55,57,60,67,79,83,84,87,90,93,97,108];
+const monsters = [2, 39, 8, 10, 13, 15,19, 21, 25, 28, 38, 43, 49,45,99,55,57,60,63,67,71,72,77,79,83,84,87,90,93,97,108];
 
 const takeSnaps = async (port) => {
     const browser = await puppeteer.launch({ devtools: false });
@@ -12,6 +12,7 @@ const takeSnaps = async (port) => {
     await page.goto(`${url}:${port}`);
 
     console.log("Generating snaps, may take a while");
+    console.log(monsters.length)
 
     for (index in monsters) {
         const imageEncoded = await page.evaluate(async (monster) => {

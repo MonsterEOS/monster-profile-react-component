@@ -88,7 +88,8 @@ class Monster3DProfile extends Component {
       .then(async VertexStudioMaterial => {
         this.monsterMaterial = VertexStudioMaterial
         try {
-          await gltfLoader(monster3D(mon.model), this.loadMonster);
+          console.log(monster3D(mon.model))
+          await gltfLoader(monster3D(mon.model), this.loadMonster)
         } catch (error) {
           console.log(error)
         }
@@ -146,8 +147,8 @@ class Monster3DProfile extends Component {
   loadMonster = gltf => {
     this.model = gltf
     this.monster = this.model.scene
-
-    const { rotation, action, position, cameraPosition, typeId, isDead } = this.props
+    
+    const { typeId, isDead } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
     //typeId
     const configuration = monsterType(typeId, isDead ? true : false)
@@ -183,8 +184,6 @@ class Monster3DProfile extends Component {
     // updates global transform of the monster
     this.monster.updateMatrixWorld()
 
-    console.log(configuration.decor)
-    console.log(decor("ice"))
     this.monster.traverse(child => {
       if (child.isMesh) {
         if (child.material[0]) {
@@ -362,6 +361,7 @@ class Monster3DProfile extends Component {
     console.log(typeId)
     console.log(monster3D(mon.model))  
     try {
+      console.log(monster3D(mon.model))
       await gltfLoader(monster3D(mon.model), this.loadMonster);
     } catch (error) {
       console.log(error)
