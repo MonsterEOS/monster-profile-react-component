@@ -37,7 +37,8 @@ const Monster = () =>
 | Name             | Type     | Default                              | Description                                                                                        |
 | ---------------- | -------- | ------------------------------------ | -------------------------------------------------------------------------------------------------- |
 | typeId           | `string` | 0                               | Monster type id               |
-| decor            | `string` | `neutral`                            | Name of the type of monster to apply, examples: "metal", "neutral", "fire".                        |   
+| decor            | `string` | `neutral`                            | Name of the type of monster to apply, examples: "metal", "neutral", "fire".                        |
+| isDead            | `boolean` | `false`                            | Applied is the monster is dead                        | 
 | action           | `string` | `Idle`                               | Monster state (animation name). Valid values are: Idle, Attack, HitReact, Sleeping, Feeding, Dead. |
 | autoRotate       | `bool`   | `false`                              | Enables autorotation.                                                                              |
 | autoRotateSpeed  | `number` | `-10`                                | If autorotation is enabled, defines its speed.                                                     |

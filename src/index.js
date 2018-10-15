@@ -28,9 +28,9 @@ class Monster3DProfile extends Component {
 
   async componentDidMount() {
         
-    const { background, typeId, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
+    const { background, typeId, isDead, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
 
-    const mon = monsterType(typeId)
+    const mon = monsterType(typeId, isDead ? isDead : false)
     
 
     //DEBUGGIN
@@ -147,10 +147,10 @@ class Monster3DProfile extends Component {
     this.model = gltf
     this.monster = this.model.scene
 
-    const { rotation, action, position, cameraPosition, typeId } = this.props
+    const { rotation, action, position, cameraPosition, typeId, isDead } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
     //typeId
-    const configuration = monsterType(typeId)
+    const configuration = monsterType(typeId, isDead ? true : false)
     const monsterRot = { ...defaultValues, ...configuration.rotation }
     const monsterPos = { ...defaultValues, ...configuration.position }
     const cameraPos = { ...defaultValues, ...configuration.cameraPosition }
@@ -351,8 +351,8 @@ class Monster3DProfile extends Component {
   applyPropertyUpdate = async () => {
 
     
-    const { autoRotate, autoRotateSpeed, action, typeId } = this.props
-    const mon = monsterType(typeId)
+    const { autoRotate, autoRotateSpeed, action, typeId, isDead } = this.props
+    const mon = monsterType(typeId, isDead ? true : false)
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed

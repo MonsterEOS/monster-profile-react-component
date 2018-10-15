@@ -9,7 +9,7 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.IDLE,
-      currentMonster: 4,
+      currentMonster: 39,
       selectedMonster: monsters[0],
       currentShader: "neutral"
     }
@@ -47,6 +47,7 @@ class App extends Component {
           directColor={0xffffff}
           zoom={true}
           decor={currentShader}
+          isDead = {false}
         />
         <br />
         
