@@ -1,6 +1,6 @@
 import React, { Fragment, Component } from 'react'
 import { render } from 'react-dom'
-import { decorations, monsters } from './utils/monsterEnum'
+import { monsters } from './utils/monsterEnum'
 import { Monster3DProfile, ActionType } from '../../src'
 import isSnaps from './utils/env'
 
@@ -9,7 +9,7 @@ class App extends Component {
     super(props)
     this.state = {
       currentAnimation: ActionType.IDLE,
-      currentMonster: "Baal",
+      currentMonster: 4,
       selectedMonster: monsters[0],
       currentShader: "neutral"
     }
@@ -20,7 +20,9 @@ class App extends Component {
   }
 
   handleMonsterChange = (event) => {
-    this.setState({ currentMonster: event.target.value })
+    
+    this.setState({ currentMonster: parseInt(event.target.value) })
+    
   }
 
   handleShaderChange = (event) => {
@@ -35,7 +37,7 @@ class App extends Component {
       <Fragment>
         <h1>Monster3DProfile</h1>
         <Monster3DProfile
-          typeId={isSnaps ? this.props.monster : 108 }          
+          typeId={isSnaps ? this.props.monster : currentMonster }          
           action={currentAnimation}
           size={{ height: "600px" }}
           background={{ alpha: isSnaps ? 0 : 1}}
@@ -59,6 +61,21 @@ class App extends Component {
               <option
                 key={action}
                 value={ActionType[action]}>
+                {action}
+              </option>
+            )
+          )}
+        </select>
+        <br/>
+        <select
+          value={currentMonster}
+          onChange={this.handleMonsterChange}
+        >
+          {Object.keys(monsters).map(
+            action => (
+              <option
+                key={action}
+                value={action}>
                 {action}
               </option>
             )
