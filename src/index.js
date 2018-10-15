@@ -29,6 +29,7 @@ class Monster3DProfile extends Component {
   async componentDidMount() {
         
     const { background, typeId, isDead, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
+    this.lastId = typeId;
 
     const mon = monsterType(typeId, isDead ? isDead : false)
     
@@ -356,20 +357,20 @@ class Monster3DProfile extends Component {
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
 
-    this.dettachMonster();
-    //const gltfModel = await monsterModelSrc(this.mon.model)
-    console.log(typeId)
-    console.log(monster3D(mon.model))  
-    try {
-      console.log(monster3D(mon.model))
-      await gltfLoader(monster3D(mon.model), this.loadMonster);
-    } catch (error) {
-      console.log(error)
+    if( this.lastId !== typeId ){
+      this.dettachMonster();
+      try {
+        console.log(monster3D(mon.model))
+        await gltfLoader(monster3D(mon.model), this.loadMonster);
+      } catch (error) {
+        console.log(error)
+      }
+      this.lastId = typeId
     }
 
     // darken or light the monster according to current 'action'
     this.monsterLightColor(action)
-
+//
   }
 
   // plays the requested animation by the 'action' prop
