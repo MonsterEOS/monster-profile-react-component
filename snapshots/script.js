@@ -4,7 +4,7 @@ const url = 'http://localhost';
 const filePath = './snapshots/images';
 const monsters = [];
 
-for (let index = 1; index <= 107; index++) {
+for (let index = 1; index <= 150; index++) {
     monsters.push(index)    
 }
 
