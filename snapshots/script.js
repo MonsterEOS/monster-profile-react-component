@@ -4,10 +4,9 @@ const url = 'http://localhost';
 const filePath = './snapshots/images';
 const monsters = [];
 
-for (let index = 1; index <= 150; index++) {
+for (let index = 0; index <= 108; index++) {
     monsters.push(index)    
 }
-
 const takeSnaps = async (port) => {
     const browser = await puppeteer.launch({ devtools: false });
     const page = await browser.newPage();
