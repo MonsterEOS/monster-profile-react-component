@@ -20,9 +20,7 @@ class App extends Component {
   }
 
   handleMonsterChange = (event) => {
-    
     //this.setState({ currentMonster: parseInt(event.target.value) })
-    
   }
 
   render() {
@@ -44,9 +42,7 @@ class App extends Component {
           decor={currentShader}
           isDead = {false}
         />
-        <br />
-        
-        <br />
+        <br /><br />
         <label>Select monster's state: </label>
         <select
           value={currentAnimation}

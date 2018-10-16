@@ -1,10 +1,10 @@
 #!/bin/bash
+
 set -o errexit
+
 DIR="snapshots/public/"
 
-
-
-#building component
+# building component
 npm run build
 
 # verify if images directory exists
@@ -21,7 +21,7 @@ then
     rm snapshots/public/*
 fi
 
-#copying demo/dist
+# copying demo/dist
 cp demo/dist/* snapshots/public/
 
 # generating snaps

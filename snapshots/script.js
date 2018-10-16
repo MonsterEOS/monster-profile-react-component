@@ -1,17 +1,20 @@
-const puppeteer = require('puppeteer');
-const dataUri = require('image-data-uri');
-const url = 'http://localhost';
-const filePath = './snapshots/images';
-const monsters = [2, 39, 8, 10, 13, 15,19, 21, 25, 28, 38, 43, 49,45,99,55,57,60,63,67,71,72,77,79,83,84,87,90,93,97,108];
+const puppeteer = require('puppeteer')
+const dataUri = require('image-data-uri')
+const url = 'http://localhost'
+const filePath = './snapshots/images'
+const monsters = []
 
+for (let index = 0; index <= 108; index++) {
+    monsters.push(index)
+}
 const takeSnaps = async (port) => {
-    const browser = await puppeteer.launch({ devtools: false });
-    const page = await browser.newPage();
+    const browser = await puppeteer.launch({ devtools: false })
+    const page = await browser.newPage()
 
-    console.log("Entering page...");
-    await page.goto(`${url}:${port}`);
+    console.log("Reading Monster3DProfile...")
+    await page.goto(`${url}:${port}`)
 
-    console.log("Generating snaps, may take a while");
+    console.log("Generating snaps, may take a while")
     console.log(monsters.length)
 
     for (index in monsters) {
@@ -30,14 +33,15 @@ const takeSnaps = async (port) => {
             return document.querySelector("canvas").toDataURL('image/png')
 
         }, monsters[index])
-        console.log(`Generating: ${monsters[index]} ...`)
-        dataUri.outputFile(imageEncoded, filePath + '/' + monsters[index] + '_' + Date.now())
-            .then(res => console.log(res));
+        console.log(`Generating: ${monsters[index]}...`)
+        const name = parseInt(index) + 1
+        dataUri
+            .outputFile(imageEncoded, filePath + '/' + name)
+            .then(console.log)
     }
-    console.log("Closing connection...");
-    await browser.close();
-    console.log("DONE!");
-
+    console.log("Closing connection...")
+    await browser.close()
+    console.log("DONE!")
 }
 
-module.exports = takeSnaps;
+module.exports = takeSnaps
