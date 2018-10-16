@@ -20,7 +20,7 @@ const takeSnaps = async (port) => {
     for (index in monsters) {
         const imageEncoded = await page.evaluate(async (monster) => {
 
-            renderIt(monster, document.querySelector("#demo"));
+            renderIt(monster, document.querySelector("#demo"))
             await ((ms = 1500) =>
                 new Promise((resolve, reject) => {
                     try {
@@ -34,9 +34,8 @@ const takeSnaps = async (port) => {
 
         }, monsters[index])
         console.log(`Generating: ${monsters[index]}...`)
-        const name = parseInt(index) + 1
         dataUri
-            .outputFile(imageEncoded, filePath + '/' + name)
+            .outputFile(imageEncoded, filePath + '/' + index)
             .then(console.log)
     }
     console.log("Closing connection...")
