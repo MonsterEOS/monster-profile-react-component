@@ -13,7 +13,7 @@ snapshots/node_modules
 /umd
 
 # images
-snapshots/images
+#snapshots/images
 
 #public inside snapshots
 snapshots/public
