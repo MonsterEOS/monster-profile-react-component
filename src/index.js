@@ -11,7 +11,6 @@ import { debounce, gltfLoader } from './utils'
 import VertexStudioMaterial from './utils/VextexStudioMaterial'
 import monster3D from './utils/monsterEnum'
 import monsterType from './utils/monster3DMatrix'
-import decor from './utils/monsterDecorators'
 
 class Monster3DProfile extends Component {
   constructor(props) {
@@ -27,15 +26,12 @@ class Monster3DProfile extends Component {
   }
 
   async componentDidMount() {
-        
+
     const { background, typeId, isDead, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
     this.lastId = typeId;
 
-    const mon = monsterType(typeId, isDead ? isDead : false)
-    
+    const mon = monsterType(typeId, isDead)
 
-    //DEBUGGIN
-    
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
     const canvasBackground = { ...defaultBackground, ...background }
@@ -83,13 +79,10 @@ class Monster3DProfile extends Component {
     this.camera.add(this.pointLight)
     this.scene.add(this.camera)
 
-    
-    
     VertexStudioMaterial()
       .then(async VertexStudioMaterial => {
         this.monsterMaterial = VertexStudioMaterial
         try {
-          console.log(monster3D(mon.model))
           await gltfLoader(monster3D(mon.model), this.loadMonster)
         } catch (error) {
           console.log(error)
@@ -148,15 +141,15 @@ class Monster3DProfile extends Component {
   loadMonster = gltf => {
     this.model = gltf
     this.monster = this.model.scene
-    
+
     const { typeId, isDead } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
-    //typeId
-    const configuration = monsterType(typeId, isDead ? true : false)
+    
+    const configuration = monsterType(typeId, isDead)
     const monsterRot = { ...defaultValues, ...configuration.rotation }
     const monsterPos = { ...defaultValues, ...configuration.position }
     const cameraPos = { ...defaultValues, ...configuration.cameraPosition }
-    
+
     // center monster
     const box = new THREE.Box3().setFromObject(this.monster)
     const size = box.getSize(new THREE.Vector3()).length()
@@ -190,13 +183,13 @@ class Monster3DProfile extends Component {
         if (child.material[0]) {
           child.material.forEach((material, idx) => {
             if (material.map) {
-              child.material[idx] = this.monsterMaterial(material.map, configuration.decor )
+              child.material[idx] = this.monsterMaterial(material.map, configuration.decor)
             }
           })
         }
         else {
           if (child.material.map) {
-            child.material = this.monsterMaterial(child.material.map,configuration.decor )
+            child.material = this.monsterMaterial(child.material.map, configuration.decor)
           }
         }
       }
@@ -250,6 +243,7 @@ class Monster3DProfile extends Component {
         this.camera.add(this.sleepingObject)
 
         const { action } = this.props
+        
         // update camera parameters
         this.camera.updateProjectionMatrix()
 
@@ -349,19 +343,17 @@ class Monster3DProfile extends Component {
   }
 
   applyPropertyUpdate = async () => {
-
-    
     const { autoRotate, autoRotateSpeed, action, typeId, isDead } = this.props
-    const mon = monsterType(typeId, isDead ? true : false)
+    const mon = monsterType(typeId, isDead)
+
     // controls
     this.controls.autoRotate = autoRotate
     this.controls.autoRotateSpeed = autoRotateSpeed
 
-    if( this.lastId !== typeId ){
+    if (this.lastId !== typeId) {
       this.dettachMonster();
       try {
-        console.log(monster3D(mon.model))
-        await gltfLoader(monster3D(mon.model), this.loadMonster);
+        await gltfLoader(monster3D(mon.model), this.loadMonster)
       } catch (error) {
         console.log(error)
       }
@@ -370,7 +362,7 @@ class Monster3DProfile extends Component {
 
     // darken or light the monster according to current 'action'
     this.monsterLightColor(action)
-//
+    //
   }
 
   // plays the requested animation by the 'action' prop
@@ -446,7 +438,7 @@ function validateAction(props, propName, componentName) {
 Monster3DProfile.propTypes = {
   typeId: PropTypes.number,
   action: validateAction,
-  
+
   position: PropTypes.shape({
     x: PropTypes.number,
     y: PropTypes.number,
@@ -497,4 +489,4 @@ Monster3DProfile.defaultProps = {
 
 Monster3DProfile = injectSheet(styles)(Monster3DProfile)
 
-export { Monster3DProfile, ActionType }
+export { Monster3DProfile, monsterType, ActionType }
