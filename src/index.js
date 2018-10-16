@@ -9,9 +9,9 @@ import styles from './styles'
 import OrbitControls from './utils/OrbitControls'
 import sleeping from '../models/ZZZ.gltf'
 import get3DMonsterModel from './utils/monsterEnum'
-import getConfigByType from './utils/get3DMonsterModelMatrix'
+import getConfigByType from './utils/monster3DMatrix'
 
-class get3DMonsterModelProfile extends Component {
+class Monster3DProfile extends Component {
   constructor(props) {
     super(props)
     this.setMountNodeRef = element => {
@@ -417,7 +417,7 @@ function validateAction(props, propName, componentName) {
   }
 }
 
-get3DMonsterModelProfile.propTypes = {
+Monster3DProfile.propTypes = {
   typeId: PropTypes.number,
   action: validateAction,
 
@@ -453,7 +453,7 @@ get3DMonsterModelProfile.propTypes = {
   })
 }
 
-get3DMonsterModelProfile.defaultProps = {
+Monster3DProfile.defaultProps = {
   action: ActionType.IDLE,
   size: {
     width: "auto",
@@ -469,6 +469,6 @@ get3DMonsterModelProfile.defaultProps = {
   darkeningColor: 0x000000
 }
 
-get3DMonsterModelProfile = injectSheet(styles)(get3DMonsterModelProfile)
+Monster3DProfile = injectSheet(styles)(Monster3DProfile)
 
-export { get3DMonsterModelProfile, getConfigByType, get3DMonsterModel, ActionType }
+export { Monster3DProfile, getConfigByType, get3DMonsterModel, ActionType }
