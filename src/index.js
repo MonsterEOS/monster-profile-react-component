@@ -8,10 +8,10 @@ import injectSheet from 'react-jss'
 import styles from './styles'
 import OrbitControls from './utils/OrbitControls'
 import sleeping from '../models/ZZZ.gltf'
-import monster3D from './utils/monsterEnum'
-import monsterType from './utils/monster3DMatrix'
+import get3DMonsterModel from './utils/monsterEnum'
+import getConfigByType from './utils/get3DMonsterModelMatrix'
 
-class Monster3DProfile extends Component {
+class get3DMonsterModelProfile extends Component {
   constructor(props) {
     super(props)
     this.setMountNodeRef = element => {
@@ -27,9 +27,9 @@ class Monster3DProfile extends Component {
   async componentDidMount() {
 
     const { background, typeId, isDead, ambientIntensity, ambientColor, directIntensity, directColor, zoom } = this.props
-    this.lastId = typeId;
+    this.lastId = typeId
 
-    const mon = monsterType(typeId, isDead)
+    const mon = getConfigByType(typeId, isDead)
 
     // default values
     const defaultBackground = { color: "#322e3a", alpha: 1 }
@@ -79,7 +79,8 @@ class Monster3DProfile extends Component {
     this.scene.add(this.camera)
 
     try {
-      this.configMonster(await gltfLoader(monster3D(mon.model)))
+      // load and configure the monster
+      this.configMonster(await gltfLoader(get3DMonsterModel(mon.model)))
 
       // start scene
       this.start()
@@ -140,7 +141,7 @@ class Monster3DProfile extends Component {
     const { typeId, isDead } = this.props
     const defaultValues = { x: 0, y: 0, z: 0 }
 
-    const { rotation, position, cameraPosition, decor } = monsterType(typeId, isDead)
+    const { rotation, position, cameraPosition, decor } = getConfigByType(typeId, isDead)
     const monsterRot = { ...defaultValues, ...rotation }
     const monsterPos = { ...defaultValues, ...position }
     const cameraPos = { ...defaultValues, ...cameraPosition }
@@ -176,7 +177,7 @@ class Monster3DProfile extends Component {
       // loading VertexStudioMaterial
       const vertexStudioMaterial = await VertexStudioMaterial()
 
-      // applying shaders to both monsters
+      // applying shader to the monster
       applyShader(this.monster, vertexStudioMaterial, decor)
     } catch (error) {
       console.error(error)
@@ -256,7 +257,7 @@ class Monster3DProfile extends Component {
       } else {
         this.camera.remove(this.sleepingObject)
       }
-      // darken or light the monster according to current 'action' -----
+      // darken or light the monster according to current 'action'
       this.monsterLightColor(action)
       this.changeStateAnimation()
     } catch (error) {
@@ -325,7 +326,7 @@ class Monster3DProfile extends Component {
 
   applyPropertyUpdate = async () => {
     const { autoRotate, autoRotateSpeed, action, typeId, isDead } = this.props
-    const mon = monsterType(typeId, isDead)
+    const mon = getConfigByType(typeId, isDead)
 
     // controls
     this.controls.autoRotate = autoRotate
@@ -334,7 +335,7 @@ class Monster3DProfile extends Component {
     if (this.lastId !== typeId) {
       this.dettachMonster();
       try {
-        const monsterGLTF = await gltfLoader(monster3D(mon.model))
+        const monsterGLTF = await gltfLoader(get3DMonsterModel(mon.model))
         this.configMonster(monsterGLTF)
       } catch (error) {
         console.log(error)
@@ -416,7 +417,7 @@ function validateAction(props, propName, componentName) {
   }
 }
 
-Monster3DProfile.propTypes = {
+get3DMonsterModelProfile.propTypes = {
   typeId: PropTypes.number,
   action: validateAction,
 
@@ -452,7 +453,7 @@ Monster3DProfile.propTypes = {
   })
 }
 
-Monster3DProfile.defaultProps = {
+get3DMonsterModelProfile.defaultProps = {
   action: ActionType.IDLE,
   size: {
     width: "auto",
@@ -468,6 +469,6 @@ Monster3DProfile.defaultProps = {
   darkeningColor: 0x000000
 }
 
-Monster3DProfile = injectSheet(styles)(Monster3DProfile)
+get3DMonsterModelProfile = injectSheet(styles)(get3DMonsterModelProfile)
 
-export { Monster3DProfile, monsterType, ActionType }
+export { get3DMonsterModelProfile, getConfigByType, get3DMonsterModel, ActionType }
