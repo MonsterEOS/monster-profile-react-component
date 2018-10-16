@@ -15,7 +15,7 @@ const takeSnaps = async (port) => {
     await page.goto(`${url}:${port}`)
 
     console.log("Generating snaps, may take a while")
-    console.log(monsters.length)
+    console.log("Total of images to generate:", monsters.length)
 
     for (index in monsters) {
         const imageEncoded = await page.evaluate(async (monster) => {
